@@ -1,0 +1,48 @@
+{
+  "id": "product-attribute",
+  "title": "PIM product attributes, groups, families and custom fields",
+  "class": "supported",
+  "extension_type": "configuration",
+  "summary": "Admin defines typed attributes, groups and families for products and categories; values reach shoppers only through publish. Showing a new attribute on the product page is a Webstore source change.",
+  "when_to_use": [
+    "shared product data, filters, comparison, variants",
+    "shape the product form with families"
+  ],
+  "not_for": [
+    "a value per customer, account or order (Custom Table)",
+    "store, role or product-type switching (families are none of these)"
+  ],
+  "evidence": [
+    {
+      "repo": "package",
+      "path": "skills/commerce-product-attributes/SKILL.md",
+      "note": "ten key facts with sources and confidence"
+    }
+  ],
+  "limitations": [
+    "Type and Code are locked after first save",
+    "Management APIs for attributes, groups and families exist only in the legacy v1 reference",
+    "Stock product page renders a fixed set of tabs"
+  ],
+  "platform_change_if": [
+    "a new attribute type",
+    "search or facet behaviour the search profile cannot express"
+  ],
+  "verification": {
+    "status": "partial",
+    "sdk_commit": "n/a",
+    "webstore_commit": "n/a",
+    "date": "2026-10-19",
+    "unverified": [
+      "behaviour on the customer's Znode version",
+      "per-type validation rules flagged by the research track"
+    ]
+  },
+  "znode_versions": [
+    "10.x"
+  ],
+  "contract": {},
+  "docs": [],
+  "apis": [],
+  "known_issues": []
+}

@@ -1,0 +1,52 @@
+{
+  "id": "product-information-overrides",
+  "title": "Product Information Overrides (per store, locale or account text)",
+  "class": "supported",
+  "extension_type": "configuration",
+  "summary": "A system table of alternate name, descriptions or SKU per store, locale and optional account. Disabled by default (two flags). The stock Webstore does not read it, so showing overrides needs a customization calling the override API.",
+  "when_to_use": [
+    "different product name or description per store, account or locale",
+    "account-specific alternate SKU or name"
+  ],
+  "not_for": [
+    "different price, stock, images, attributes or SEO per store",
+    "anything that must be saved on the order"
+  ],
+  "evidence": [
+    {
+      "repo": "package",
+      "path": "skills/commerce-product-overrides/SKILL.md",
+      "note": "ten key facts"
+    },
+    {
+      "repo": "package",
+      "path": "skills/commerce-product-overrides/reference/customization-decisions.md",
+      "note": "verdict table"
+    }
+  ],
+  "limitations": [
+    "No uniqueness rule; duplicates fail at search time",
+    "Needs a full catalog publish to reach search",
+    "Account fallback behaviour differs between code and API reference"
+  ],
+  "platform_change_if": [
+    "a schema change to the system table",
+    "showing overrides on the stock storefront without a customization"
+  ],
+  "verification": {
+    "status": "partial",
+    "sdk_commit": "n/a",
+    "webstore_commit": "n/a",
+    "date": "2026-10-19",
+    "unverified": [
+      "account-code fallback on the customer's version"
+    ]
+  },
+  "znode_versions": [
+    "10.x"
+  ],
+  "contract": {},
+  "docs": [],
+  "apis": [],
+  "known_issues": []
+}

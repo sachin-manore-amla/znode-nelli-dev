@@ -1,0 +1,49 @@
+{
+  "id": "page-builder-and-theme",
+  "title": "Page Builder, themes and Webstore customization options",
+  "class": "customizable",
+  "extension_type": "webstore",
+  "summary": "Administrators compose storefront content in Page Builder; layout and component changes beyond the stock widgets and theme override need Webstore source customization (labelled as a source customization).",
+  "when_to_use": [
+    "content and layout changes through widgets and theme",
+    "new components or pages through source customization"
+  ],
+  "not_for": [
+    "backend business logic (use the SDK)"
+  ],
+  "evidence": [
+    {
+      "repo": "package",
+      "path": "skills/webstore-customization/SKILL.md",
+      "note": "all customization routes"
+    },
+    {
+      "repo": "package",
+      "path": "skills/webstore-page-builder-and-themes/SKILL.md",
+      "note": "Page Builder as seen by administrators"
+    }
+  ],
+  "limitations": [
+    "Source customizations must be merged on upgrade",
+    "Verdicts for product card layout and cart UI flagged for review"
+  ],
+  "platform_change_if": [
+    "a widget or setting the Webstore does not expose and cannot be added in source"
+  ],
+  "verification": {
+    "status": "partial",
+    "sdk_commit": "n/a",
+    "webstore_commit": "n/a",
+    "date": "2026-10-19",
+    "unverified": [
+      "verdicts for changing the product card layout and replacing the cart UI"
+    ]
+  },
+  "znode_versions": [
+    "10.x"
+  ],
+  "contract": {},
+  "docs": [],
+  "apis": [],
+  "known_issues": []
+}

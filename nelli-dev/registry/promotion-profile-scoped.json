@@ -1,0 +1,51 @@
+{
+  "id": "promotion-profile-scoped",
+  "title": "Standard promotion scoped by store and user profile",
+  "class": "supported",
+  "extension_type": "configuration",
+  "znode_versions": [
+    "10.x"
+  ],
+  "summary": "Built-in promotions can be limited to a store (or all) and to a user profile (or all). They apply on cart events, not necessarily to listing prices.",
+  "when_to_use": [
+    "a discount applied in the cart for a customer group modelled as a User Profile"
+  ],
+  "not_for": [
+    "scoping by Account or account group (not stated in the KB)",
+    "changing the price shown on the product listing (promotions run on cart events)"
+  ],
+  "contract": {
+    "scoping": "Store, User Profile; target products, brands, catalogs, categories, shipping methods (KB)",
+    "timing": "cart events: add, update, view cart, checkout (Promotion Extensibility Developer Guide)"
+  },
+  "evidence": [
+    {
+      "repo": "kb",
+      "path": "https://support.znode.com/support/solutions/articles/43000756969-configuring-a-promotion",
+      "note": "scoping options: store and user profile; account and account group not stated"
+    }
+  ],
+  "docs": [
+    {
+      "title": "Configuring a Promotion",
+      "url": "https://support.znode.com/support/solutions/articles/43000756969-configuring-a-promotion"
+    }
+  ],
+  "apis": [],
+  "limitations": [
+    "Account and account group are not scoping options in the KB article",
+    "Whether the 'Amount/Percent Off Displayed Product Price' type changes listing prices is not verified"
+  ],
+  "known_issues": [],
+  "platform_change_if": [],
+  "verification": {
+    "status": "partial",
+    "sdk_commit": "n/a",
+    "webstore_commit": "n/a",
+    "date": "2026-10-10",
+    "unverified": [
+      "listing-price effect of promotion types",
+      "stacking and global promotion/coupon settings on the customer's version"
+    ]
+  }
+}

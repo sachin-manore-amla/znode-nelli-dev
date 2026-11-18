@@ -1,0 +1,68 @@
+{
+  "id": "custom-table",
+  "title": "Custom Tables (customer-defined tables, fields and rows)",
+  "class": "supported",
+  "extension_type": "configuration",
+  "znode_versions": ["10.x"],
+  "summary": "An administrator defines a table (key, name), its fields and rows in Dev Center, through the Dynamic Data Table API, or by CSV import. Intended for reference data, mappings, lookup lists, flags and light extensions, not core business data. Reading the data from a storefront or a calculation needs a custom endpoint or a Webstore change.",
+  "when_to_use": [
+    "map ERP or legacy ids to Znode ids",
+    "small lookup or configuration lists used by custom code",
+    "feature flags and eligibility lists",
+    "light extensions to display or logic where an attribute or user-defined field does not fit"
+  ],
+  "not_for": [
+    "an extra field on a product, account, user or store (use PIM attributes or Global Attributes)",
+    "large, fast-changing or transactional data, or data needing joins or foreign keys",
+    "direct SQL access to the table's database (the KB says the Custom API has none)"
+  ],
+  "contract": {
+    "admin": "Dev Center > Custom Tables",
+    "api": "Dynamic Data Table API, 30 operations under /v1/custom-tables, /v1/custom-table-fields, /v1/custom-table-data (spec: nd-knowledge/specs/custom-table.json)",
+    "field_types": "Text, TextArea, Number (cannot currently be created), Numeric, Boolean, datetime (lowercase)",
+    "settings": "System Settings > Global Settings > Custom Table Settings: CustomTableMaxFieldLengthForText, ...ForTextArea, ...ForNumber (blank = no ceiling)",
+    "sdk": "ICustomTableClient registered in CustomDependencyRegistration; sample call GetCustomTables(null, null, 1, 10) in CustomService",
+    "knowledge_skill": "sdk-custom-tables"
+  },
+  "evidence": [
+    {"repo": "kb", "path": "https://support.znode.com/support/solutions/articles/43000757107-managing-custom-tables", "note": "Admin paths, field settings, records, import and export"},
+    {"repo": "kb", "path": "https://support.znode.com/support/solutions/articles/43000782807-custom-tables-limitations-fair-usage-guidelines", "note": "positioning, advisory limits, recommended and discouraged uses"},
+    {"repo": "kb", "path": "https://apidocs.znode.com/docs/custom-table-api", "note": "published Dynamic Data Table API"},
+    {"repo": "sdk", "path": "Custom.Api.Core/App_Start/CustomDependencyRegistration.cs", "note": "registers ICustomTableClient"},
+    {"repo": "sdk", "path": "Custom.Api.Core/Services/CustomService.cs", "note": "GetCustomTableDetailList calls GetCustomTables"}
+  ],
+  "docs": [
+    {"title": "Managing Custom Tables", "url": "https://support.znode.com/support/solutions/articles/43000757107-managing-custom-tables"},
+    {"title": "Custom Tables - Limitations & Fair Usage Guidelines", "url": "https://support.znode.com/support/solutions/articles/43000782807-custom-tables-limitations-fair-usage-guidelines"}
+  ],
+  "apis": [{"family": "custom-table"}],
+  "limitations": [
+    "No joins, foreign keys or composite keys; one unique field per table, only on Text or Number, not addable once rows exist",
+    "The Number (integer) field type cannot be created; use Numeric with scale 0",
+    "The API has no per-role or ownership checks: wrap it in an endpoint that authorizes",
+    "Imports report success on partial failure; read the import log",
+    "Bulk, import and delete-by-value paths raise no events; single-row routes do",
+    "The published spec's import contract (importData, importType) is not what the implementation uses"
+  ],
+  "known_issues": [
+    "KB's Text 4,000 / Text Area 8,000 are the largest values the Global Settings form accepts, not fixed validation limits; blank settings mean no check",
+    "Some GET responses are double-encoded JSON",
+    "Behaviours observed before 10.14.0.0 may have changed with its stricter request validation"
+  ],
+  "platform_change_if": [
+    "a new system table or a change to what a system table does",
+    "joins, foreign keys or transactions across tables",
+    "direct database access to custom table data"
+  ],
+  "verification": {
+    "status": "partial",
+    "sdk_commit": "7e30a61",
+    "webstore_commit": "n/a",
+    "date": "2026-10-15",
+    "unverified": [
+      "the member list of the custom table client interface for the SDK's pinned package version (only GetCustomTables is seen in sample code)",
+      "behaviour on the customer's Znode version (observed on 10.14.x development environments)",
+      "whether a promotion extension can resolve the client from its service provider"
+    ]
+  }
+}

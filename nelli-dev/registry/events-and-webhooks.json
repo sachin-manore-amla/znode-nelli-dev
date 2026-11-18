@@ -1,0 +1,48 @@
+{
+  "id": "events-and-webhooks",
+  "title": "Znode events and outbound webhooks",
+  "class": "customizable",
+  "extension_type": "event-consumer",
+  "summary": "Domain events and webhook settings let an external system react after something changes. Events are after the fact and carry codes, not full records; a consumer or an event-triggered Data Exchange fetches the rest.",
+  "when_to_use": [
+    "notify an external system when an order, account or product changes"
+  ],
+  "not_for": [
+    "changing the outcome of the operation (use a method override)"
+  ],
+  "evidence": [
+    {
+      "repo": "package",
+      "path": "skills/sdk-events-and-webhooks/SKILL.md",
+      "note": "events, webhook settings, consumers"
+    },
+    {
+      "repo": "package",
+      "path": "skills/sdk-events-and-webhooks/reference/04-event-vs-override.md",
+      "note": "events versus overrides"
+    }
+  ],
+  "limitations": [
+    "Not synchronous with the operation",
+    "Delivery guarantees depend on the broker"
+  ],
+  "platform_change_if": [
+    "an event that does not exist for the module"
+  ],
+  "verification": {
+    "status": "partial",
+    "sdk_commit": "n/a",
+    "webstore_commit": "n/a",
+    "date": "2026-10-19",
+    "unverified": [
+      "event list on the customer's release"
+    ]
+  },
+  "znode_versions": [
+    "10.x"
+  ],
+  "contract": {},
+  "docs": [],
+  "apis": [],
+  "known_issues": []
+}

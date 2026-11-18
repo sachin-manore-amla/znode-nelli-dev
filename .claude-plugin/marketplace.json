@@ -1,0 +1,18 @@
+{
+  "name": "znode-nelli-dev",
+  "owner": {
+    "name": "Znode"
+  },
+  "metadata": {
+    "description": "Nelli-Dev, the Znode customization engineer for customer and partner developers."
+  },
+  "plugins": [
+    {
+      "name": "nelli-dev",
+      "source": "./nelli-dev",
+      "description": "Nelli-Dev: the Znode customization engineer for customer and partner developers. Validates a customization requirement, recommends APIs and builds curls, implements and reviews your Custom API SDK and Webstore code. Start with /nelli-dev:setup.",
+      "version": "0.1.0",
+      "keywords": ["znode", "customization", "custom-api-sdk", "webstore"]
+    }
+  ]
+}

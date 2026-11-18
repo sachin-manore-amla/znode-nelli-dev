@@ -1,0 +1,87 @@
+{
+  "id": "webstore-source-customization",
+  "title": "Webstore customization (Page Builder widgets, theme override, source change)",
+  "class": "customizable",
+  "extension_type": "webstore-source",
+  "znode_versions": [
+    "10.x"
+  ],
+  "summary": "Three documented levels: (1) configure pages in Page Builder (CMS > Store Experience, CMS > Pages); (2) add custom Page Builder components (widgets) and override components with a theme package registered in the theme config map, with Tailwind theming; (3) change the Webstore source (pages, components, BFF route handlers, API clients). Levels 1 and 2 are documented mechanisms in the KB's Webstore Customization Guide; level 3 is a source customization with upgrade-merge cost.",
+  "when_to_use": [
+    "rearrange or edit predefined commerce pages and content pages: Page Builder, no code",
+    "a new storefront component or widget; restyle or replace a component for one theme: widget plus theme override",
+    "a new BFF route, a new page flow, or a change in base logic: source change"
+  ],
+  "not_for": [
+    "business rules that must be identical on listing, cart and checkout: keep those in the API layer, not the UI"
+  ],
+  "contract": {
+    "stack": "Next.js App Router, React, TypeScript, Nx monorepo",
+    "pattern": "UI -> BFF route handler (apps/webstore/src/app/api/**/route.ts) -> Znode API / custom endpoint",
+    "build": "npx nx lint webstore; npx nx build webstore; npx nx test webstore",
+    "documented_mechanisms": {
+      "custom_widget": "folder per widget under the page-builder package's base-config widgets (Config file with fields, defaultProps, label, render; Render file), registered in the base components config; every widget needs a category (addComponentToCategories) or it does not appear in the editor",
+      "theme_override": "scaffold a theme library package, add path aliases, a theme config folder with override-component-list, root-config and optional page-config-map, and register the theme in the theme config map; set DEFAULT_THEME; configure the theme in Admin first",
+      "tailwind_theming": "theme tailwind config scoped by a data-theme selector via the tailwindcss-themes plugin",
+      "page_builder": "CMS > Store Experience (predefined pages: product detail, category, brand list) and CMS > Pages (content pages); only published pages render",
+      "source_kb": "Webstore Customization Guide, KB 43000761087"
+    }
+  },
+  "evidence": [
+    {
+      "repo": "webstore",
+      "path": "apps/webstore/src/app/api",
+      "note": "BFF route tree"
+    },
+    {
+      "repo": "webstore",
+      "path": "packages/clients",
+      "note": "API clients"
+    },
+    {
+      "repo": "webstore",
+      "path": "nx.json",
+      "note": "workspace"
+    },
+    {
+      "repo": "kb",
+      "path": "https://support.znode.com/support/solutions/articles/43000761087-webstore-customization-guide",
+      "note": "read in full 2026-10-15: widgets, theme override, Page Builder, Tailwind theming, env variable names, warnings"
+    }
+  ],
+  "docs": [
+    {
+      "title": "Webstore Customization Guide",
+      "url": "https://support.znode.com/support/solutions/articles/43000761087-webstore-customization-guide"
+    },
+    {
+      "title": "Webstore Development & Page Builder Setup Guide",
+      "url": "https://support.znode.com/support/solutions/articles/43000760892-webstore-development-page-builder-setup-guide"
+    },
+    {
+      "title": "Configuring a Site Theme",
+      "url": "https://support.znode.com/support/solutions/articles/43000757076-configuring-a-site-theme"
+    }
+  ],
+  "apis": [],
+  "limitations": [
+    "Do not modify existing theme folders; add a new theme or widget instead (KB warning)",
+    "Every new theme must be registered in the theme config map and its components in the override component list, or it will not load",
+    "The KB guide does not cover upgrades or merging local changes, BFF routes, code-level custom pages or deployment steps",
+    "A change to base source (level 3) has upgrade-merge cost: state it in every proposal"
+  ],
+  "known_issues": [],
+  "platform_change_if": [
+    "the data the page needs is not returned by any Znode API"
+  ],
+  "verification": {
+    "status": "partial",
+    "sdk_commit": "7e30a61",
+    "webstore_commit": "f90ca894d",
+    "date": "2026-10-15",
+    "unverified": [
+      "the KB steps have not yet been checked against the Webstore source in the customer's clone (track D)",
+      "how customer upgrades merge with local changes (the KB is silent)"
+    ]
+  }
+}

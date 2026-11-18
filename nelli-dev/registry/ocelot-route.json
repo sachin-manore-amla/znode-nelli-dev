@@ -1,0 +1,43 @@
+{
+  "id": "ocelot-route",
+  "title": "Gateway route for custom endpoints (Ocelot)",
+  "class": "customizable",
+  "extension_type": "ocelot-route",
+  "znode_versions": [
+    "10.x"
+  ],
+  "summary": "Expose custom endpoints through the gateway by editing Engine.Custom.Api/Ocelot/CustomOcelot.json.",
+  "when_to_use": [
+    "a custom endpoint must be reachable through the API gateway"
+  ],
+  "not_for": [],
+  "contract": {
+    "file": "Engine.Custom.Api/Ocelot/CustomOcelot.json"
+  },
+  "evidence": [
+    {
+      "repo": "sdk",
+      "path": "Engine.Custom.Api/Ocelot/CustomOcelot.json",
+      "note": "route file"
+    },
+    {
+      "repo": "sdk",
+      "path": "Custom.Api.Core/Controllers/OcelotRoutesController.cs",
+      "note": "route management endpoint"
+    }
+  ],
+  "docs": [],
+  "apis": [],
+  "limitations": [],
+  "known_issues": [],
+  "platform_change_if": [],
+  "verification": {
+    "status": "partial",
+    "sdk_commit": "7e30a61",
+    "webstore_commit": "f90ca894d",
+    "date": "2026-10-09",
+    "unverified": [
+      "route schema and which keys Znode requires"
+    ]
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "id": "data-exchange",
+  "title": "Commerce Connector Data Exchange (scheduled and real-time integrations)",
+  "class": "supported",
+  "extension_type": "configuration",
+  "summary": "Admin-configured multi-step exchanges (API, SFTP, Blob, Znode Import) that run on a schedule or on an event or callback trigger, with a Credential Vault. A custom processor covers transformations the mapper cannot express. Replaces the legacy ERP connector.",
+  "when_to_use": [
+    "pull ERP data on a schedule",
+    "push an order or account change to an ERP when it happens",
+    "real-time stock via callback with the documented limits"
+  ],
+  "not_for": [
+    "arbitrary jobs with no data movement",
+    "guaranteed delivery with retries",
+    "polling under 5 minutes",
+    "new work on the legacy ERP connector"
+  ],
+  "evidence": [
+    {
+      "repo": "package",
+      "path": "skills/sdk-data-exchange/SKILL.md",
+      "note": "facts and decision guide"
+    },
+    {
+      "repo": "package",
+      "path": "skills/sdk-data-exchange/reference/07-kb-vs-product.md",
+      "note": "KB conflicts"
+    }
+  ],
+  "limitations": [
+    "No dead-letter queue or retry UI",
+    "Imports never delete and write Draft data: publish afterwards",
+    "No log viewer for custom processors"
+  ],
+  "platform_change_if": [
+    "a generic customer job runner",
+    "retry and dead-letter handling inside the module"
+  ],
+  "verification": {
+    "status": "partial",
+    "sdk_commit": "n/a",
+    "webstore_commit": "n/a",
+    "date": "2026-10-19",
+    "unverified": [
+      "behaviour on the customer's Znode version",
+      "custom processors in multi-step exchanges (KB articles disagree)"
+    ]
+  },
+  "znode_versions": [
+    "10.x"
+  ],
+  "contract": {},
+  "docs": [],
+  "apis": [],
+  "known_issues": []
+}

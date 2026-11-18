@@ -1,0 +1,56 @@
+{
+  "id": "method-override",
+  "title": "Method override (synchronous webhook)",
+  "class": "customizable",
+  "extension_type": "method-override",
+  "znode_versions": [
+    "10.x"
+  ],
+  "summary": "Znode calls your endpoint during a core method, lets you change the request or response, or skip the default execution (SkipExecution).",
+  "when_to_use": [
+    "adjust a calculation result (for example totals) without changing Znode code",
+    "replace the default behaviour of a supported hook"
+  ],
+  "not_for": [
+    "any method that is not exposed as a hook: that needs a platform change"
+  ],
+  "contract": {
+    "language": "C# / .NET 8",
+    "receiver": "POST ~/callback-event-subscriber (OverrideEventSubscriberController)",
+    "message": "OverrideZnodeActionEvent: ResponsePayload, ExtendedRequestPayload, WebHookURL, SecretKey, SkipExecution",
+    "hook_named_in_skills": "CommerceCalculateCompleted"
+  },
+  "evidence": [
+    {
+      "repo": "sdk",
+      "path": "Custom.Libraries.Event/Controllers/OverrideEventSubscriberController.cs",
+      "note": "receiver endpoint"
+    },
+    {
+      "repo": "sdk",
+      "path": "Custom.Libraries.Event/Models/ZnodeEvents/OverrideEvents/OverrideZnodeActionEvent.cs",
+      "note": "message shape incl. SkipExecution and SecretKey"
+    }
+  ],
+  "docs": [],
+  "apis": [],
+  "limitations": [
+    "Runs in the request path of a Znode operation: it must be fast and must not fail the call",
+    "Validate SecretKey on every request"
+  ],
+  "known_issues": [],
+  "platform_change_if": [
+    "the method you need to intercept has no registered hook"
+  ],
+  "verification": {
+    "status": "partial",
+    "sdk_commit": "7e30a61",
+    "webstore_commit": "f90ca894d",
+    "date": "2026-10-09",
+    "unverified": [
+      "complete list of overridable methods and fields",
+      "registration steps in Admin",
+      "timeout and failure behaviour of the caller"
+    ]
+  }
+}

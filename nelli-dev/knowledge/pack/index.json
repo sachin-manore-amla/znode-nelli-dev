@@ -1,0 +1,254 @@
+[
+ {
+  "path": "accounts/Accounts/MOD-ADDRESS/actions/add-address/01-functional.md",
+  "module": "accounts",
+  "title": "Add an address",
+  "kind": "functional",
+  "chars": 20119
+ },
+ {
+  "path": "accounts/Accounts/MOD-ADDRESS/actions/address-suggestion/01-functional.md",
+  "module": "accounts",
+  "title": "Shipping address suggestion (search your addresses at checkout)",
+  "kind": "functional",
+  "chars": 4010
+ },
+ {
+  "path": "accounts/Accounts/MOD-ADDRESS/actions/address-validation/01-functional.md",
+  "module": "accounts",
+  "title": "Address validation (recommended address)",
+  "kind": "functional",
+  "chars": 5581
+ },
+ {
+  "path": "accounts/Accounts/MOD-ADDRESS/actions/checkout-address-selection/01-functional.md",
+  "module": "accounts",
+  "title": "Choosing the shipping and billing address of a cart, order or quote",
+  "kind": "functional",
+  "chars": 4574
+ },
+ {
+  "path": "accounts/Accounts/MOD-ADDRESS/actions/country-state-lists/01-functional.md",
+  "module": "accounts",
+  "title": "Country and state lists on the address forms",
+  "kind": "functional",
+  "chars": 2914
+ },
+ {
+  "path": "accounts/Accounts/MOD-ADDRESS/actions/delete-address/01-functional.md",
+  "module": "accounts",
+  "title": "Delete an address",
+  "kind": "functional",
+  "chars": 6904
+ },
+ {
+  "path": "accounts/Accounts/MOD-ADDRESS/actions/edit-address/01-functional.md",
+  "module": "accounts",
+  "title": "Edit an address",
+  "kind": "functional",
+  "chars": 13620
+ },
+ {
+  "path": "accounts/Accounts/MOD-ADDRESS/actions/order-address-update/01-functional.md",
+  "module": "accounts",
+  "title": "Changing the address on an existing order or quote",
+  "kind": "functional",
+  "chars": 3990
+ },
+ {
+  "path": "accounts/Accounts/MOD-ADDRESS/actions/set-default-address/01-functional.md",
+  "module": "accounts",
+  "title": "Set the default (primary) billing and shipping address",
+  "kind": "functional",
+  "chars": 6095
+ },
+ {
+  "path": "accounts/Accounts/MOD-ADDRESS/actions/view-address-book/01-functional.md",
+  "module": "accounts",
+  "title": "View the address book",
+  "kind": "functional",
+  "chars": 4059
+ },
+ {
+  "path": "custom-table/Dev-Center/MOD-CUSTOM-TABLE/actions/check-rows-exist/01-functional.md",
+  "module": "custom-table",
+  "title": "check-rows-exist \u2014 functional",
+  "kind": "functional",
+  "chars": 11954
+ },
+ {
+  "path": "custom-table/Dev-Center/MOD-CUSTOM-TABLE/actions/create-table/01-functional.md",
+  "module": "custom-table",
+  "title": "Create Table -- Functional",
+  "kind": "functional",
+  "chars": 8470
+ },
+ {
+  "path": "custom-table/Dev-Center/MOD-CUSTOM-TABLE/actions/delete-table/01-functional.md",
+  "module": "custom-table",
+  "title": "Delete a custom table",
+  "kind": "functional",
+  "chars": 12808
+ },
+ {
+  "path": "custom-table/Dev-Center/MOD-CUSTOM-TABLE/actions/list-tables/01-functional.md",
+  "module": "custom-table",
+  "title": "List Custom Tables \u2014 functional guide",
+  "kind": "functional",
+  "chars": 19040
+ },
+ {
+  "path": "custom-table/Dev-Center/MOD-CUSTOM-TABLE/actions/open-table/01-functional.md",
+  "module": "custom-table",
+  "title": "Open a Custom Table",
+  "kind": "functional",
+  "chars": 7441
+ },
+ {
+  "path": "custom-table/Dev-Center/MOD-CUSTOM-TABLE/actions/rename-table/01-functional.md",
+  "module": "custom-table",
+  "title": "Rename Table \u2014 Functional",
+  "kind": "functional",
+  "chars": 8724
+ },
+ {
+  "path": "custom-table/Dev-Center/MOD-CUSTOM-TABLE-DATA/actions/add-record/01-functional.md",
+  "module": "custom-table",
+  "title": "Add record \u2014 Functional",
+  "kind": "functional",
+  "chars": 10805
+ },
+ {
+  "path": "custom-table/Dev-Center/MOD-CUSTOM-TABLE-DATA/actions/csv-template/01-functional.md",
+  "module": "custom-table",
+  "title": "CSV Template \u2014 Functional",
+  "kind": "functional",
+  "chars": 5340
+ },
+ {
+  "path": "custom-table/Dev-Center/MOD-CUSTOM-TABLE-DATA/actions/delete-record/01-functional.md",
+  "module": "custom-table",
+  "title": "Delete record \u2014 Functional",
+  "kind": "functional",
+  "chars": 7502
+ },
+ {
+  "path": "custom-table/Dev-Center/MOD-CUSTOM-TABLE-DATA/actions/edit-record/01-functional.md",
+  "module": "custom-table",
+  "title": "Edit record \u2014 Functional",
+  "kind": "functional",
+  "chars": 8502
+ },
+ {
+  "path": "custom-table/Dev-Center/MOD-CUSTOM-TABLE-DATA/actions/export-records/01-functional.md",
+  "module": "custom-table",
+  "title": "Export records \u2014 Functional",
+  "kind": "functional",
+  "chars": 7096
+ },
+ {
+  "path": "custom-table/Dev-Center/MOD-CUSTOM-TABLE-DATA/actions/import-records/01-functional.md",
+  "module": "custom-table",
+  "title": "Import Records \u2014 Functional",
+  "kind": "functional",
+  "chars": 6795
+ },
+ {
+  "path": "custom-table/Dev-Center/MOD-CUSTOM-TABLE-DATA/actions/record-grid/01-functional.md",
+  "module": "custom-table",
+  "title": "Record grid \u2014 Functional",
+  "kind": "functional",
+  "chars": 7930
+ },
+ {
+  "path": "custom-table/Dev-Center/MOD-CUSTOM-TABLE-DATA/actions/value-validation/01-functional.md",
+  "module": "custom-table",
+  "title": "Value validation \u2014 Functional",
+  "kind": "functional",
+  "chars": 11076
+ },
+ {
+  "path": "custom-table/Dev-Center/MOD-CUSTOM-TABLE-FIELD/actions/add-fields/01-functional.md",
+  "module": "custom-table",
+  "title": "add-fields \u2014 Functional overview",
+  "kind": "functional",
+  "chars": 12814
+ },
+ {
+  "path": "custom-table/Dev-Center/MOD-CUSTOM-TABLE-FIELD/actions/delete-field/01-functional.md",
+  "module": "custom-table",
+  "title": "Delete Field \u2014 Functional",
+  "kind": "functional",
+  "chars": 9403
+ },
+ {
+  "path": "custom-table/Dev-Center/MOD-CUSTOM-TABLE-FIELD/actions/edit-field/01-functional.md",
+  "module": "custom-table",
+  "title": "Edit field",
+  "kind": "functional",
+  "chars": 9210
+ },
+ {
+  "path": "custom-table/Dev-Center/MOD-CUSTOM-TABLE-FIELD/actions/field-list/01-functional.md",
+  "module": "custom-table",
+  "title": "field-list \u2014 Functional overview",
+  "kind": "functional",
+  "chars": 7489
+ },
+ {
+  "path": "custom-table/Dev-Center/MOD-CUSTOM-TABLE-FIELD/actions/field-types/01-functional.md",
+  "module": "custom-table",
+  "title": "Field types",
+  "kind": "functional",
+  "chars": 8897
+ },
+ {
+  "path": "custom-table/Dev-Center/MOD-CUSTOM-TABLE-FIELD/actions/unique-field/01-functional.md",
+  "module": "custom-table",
+  "title": "Unique field",
+  "kind": "functional",
+  "chars": 7556
+ },
+ {
+  "path": "custom-table/Dev-Center/MOD-SYSTEM-TABLE/actions/system-table-api/01-functional.md",
+  "module": "custom-table",
+  "title": "System Table API",
+  "kind": "functional",
+  "chars": 6097
+ },
+ {
+  "path": "custom-table/Dev-Center/MOD-SYSTEM-TABLE/actions/system-table-data/01-functional.md",
+  "module": "custom-table",
+  "title": "System Table Data",
+  "kind": "functional",
+  "chars": 9155
+ },
+ {
+  "path": "custom-table/Dev-Center/MOD-SYSTEM-TABLE/actions/system-table-detail/01-functional.md",
+  "module": "custom-table",
+  "title": "System Table Detail",
+  "kind": "functional",
+  "chars": 6208
+ },
+ {
+  "path": "custom-table/Dev-Center/MOD-SYSTEM-TABLE/actions/system-table-fields/01-functional.md",
+  "module": "custom-table",
+  "title": "System Table Fields",
+  "kind": "functional",
+  "chars": 9054
+ },
+ {
+  "path": "custom-table/Dev-Center/MOD-SYSTEM-TABLE/actions/system-table-list/01-functional.md",
+  "module": "custom-table",
+  "title": "System Table List",
+  "kind": "functional",
+  "chars": 5026
+ },
+ {
+  "path": "custom-table/Dev-Center/MOD-SYSTEM-TABLE/actions/system-vs-custom/01-functional.md",
+  "module": "custom-table",
+  "title": "System Tables vs Custom Tables",
+  "kind": "functional",
+  "chars": 6131
+ }
+]

@@ -1,0 +1,55 @@
+{
+  "id": "admin-customization",
+  "title": "Admin customization endpoints",
+  "class": "customizable",
+  "extension_type": "admin-customization",
+  "znode_versions": [
+    "10.x"
+  ],
+  "summary": "Custom.Admin.Core carries Admin-side customization controllers (for example account and store).",
+  "when_to_use": [
+    "a custom Admin screen or action backed by custom logic"
+  ],
+  "not_for": [
+    "storefront changes"
+  ],
+  "contract": {
+    "language": "C# / .NET 8",
+    "project": "Custom.Admin.Core",
+    "registration": "builder.RegisterCustomAdminServices(); app.RegisterCustomAdminMiddlewares(builder)"
+  },
+  "evidence": [
+    {
+      "repo": "sdk",
+      "path": "Custom.Admin.Core/Controllers/CustomAccountController.cs",
+      "note": "sample"
+    },
+    {
+      "repo": "sdk",
+      "path": "Custom.Admin.Core/Controllers/StoreController.cs",
+      "note": "sample"
+    }
+  ],
+  "docs": [
+    {
+      "title": "Admin Customization (not yet read)",
+      "url": "https://support.znode.com/support/solutions/articles/43000761412-admin-customization"
+    }
+  ],
+  "apis": [],
+  "limitations": [
+    "Remove the Admin registration lines in Program.cs when Admin customization is not used"
+  ],
+  "known_issues": [],
+  "platform_change_if": [],
+  "verification": {
+    "status": "partial",
+    "sdk_commit": "7e30a61",
+    "webstore_commit": "f90ca894d",
+    "date": "2026-10-09",
+    "unverified": [
+      "how the Admin application loads these controllers",
+      "which Admin screens can be extended"
+    ]
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "id": "price-list-account-profile",
+  "title": "Buyer-specific price lists (assigned to an Account or User Profile)",
+  "class": "supported",
+  "extension_type": "configuration",
+  "znode_versions": [
+    "10.x"
+  ],
+  "summary": "A price list holding special prices can be associated with a B2B Account or a User Profile; Znode's precedence rules decide the price shown on the storefront and used at checkout. Configuration only, no code.",
+  "when_to_use": [
+    "special or contract pricing for a customer group modelled as an Account or a User Profile",
+    "time-limited prices (activation and expiration dates on the list)"
+  ],
+  "not_for": [
+    "a percentage rule over the whole catalog without maintaining prices (consider a profile-scoped promotion, which is cart-time)",
+    "a group that is neither an Account nor a Profile"
+  ],
+  "contract": {
+    "admin_path": "OMS > Pricing Lists (as read in the pricing skill; confirm in the Admin version in use)",
+    "precedence": "a lower precedence number wins; resolution order per the pricing skill: user, account, profile, store (skill only, 50-70%)"
+  },
+  "evidence": [
+    {
+      "repo": "kb",
+      "path": "https://support.znode.com/support/solutions/articles/43000756914-znode-pricing-approaches",
+      "note": "buyer-specific lists linked to Accounts and User Profiles; precedence decides the displayed and checkout price"
+    }
+  ],
+  "docs": [
+    {
+      "title": "Znode Pricing Approaches",
+      "url": "https://support.znode.com/support/solutions/articles/43000756914-znode-pricing-approaches"
+    }
+  ],
+  "apis": [],
+  "limitations": [
+    "Child accounts do not inherit a parent's price lists (pricing skill only; verify)",
+    "One price per SKU: a rule like '10% off everything' means maintaining the list",
+    "Not verified live on an environment"
+  ],
+  "known_issues": [],
+  "platform_change_if": [],
+  "verification": {
+    "status": "partial",
+    "sdk_commit": "n/a",
+    "webstore_commit": "n/a",
+    "date": "2026-10-10",
+    "unverified": [
+      "Admin steps and menu names on the customer's Znode version",
+      "parent/child account inheritance",
+      "behaviour with tier and sale prices together"
+    ]
+  }
+}

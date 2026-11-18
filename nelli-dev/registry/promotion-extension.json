@@ -1,0 +1,98 @@
+{
+  "id": "promotion-extension",
+  "title": "Custom promotion type (Promotions SDK)",
+  "class": "customizable",
+  "extension_type": "promotion-extension",
+  "znode_versions": [
+    "10.0.0-rc-01 and later (package version in the sample)"
+  ],
+  "summary": "Add a promotion type with your own calculation logic by subclassing CartPromotionTypeBase from Znode.Libraries.Promotions.SDK and marking it with [PromotionExtension].",
+  "when_to_use": [
+    "a discount rule the built-in promotion types cannot express",
+    "a discount that depends on custom conditions"
+  ],
+  "not_for": [
+    "a discount the built-in promotion types, price lists or coupons already cover: configure those instead (verdict: supported)",
+    "changing the order in which Znode applies promotions or taxes"
+  ],
+  "contract": {
+    "language": "C# / .NET 8",
+    "base_type": "CartPromotionTypeBase",
+    "attribute": "[PromotionExtension(typeof(CartPromotionTypeBase))]",
+    "override": "PromotionCalculateResult Calculate(int? couponIndex, IReadOnlyList<IPromotionInfo> allPromotions)",
+    "result": "set result.OrderLevelDiscount = CreatePromoDiscount(amount, DiscountLevelCode.OrderLevel) and result.IsApplied = true",
+    "helpers_seen": [
+      "GetCartQuantity()",
+      "ServiceProvider.GetService<IExtensionLogger>()"
+    ],
+    "packages": [
+      "Znode10.Libraries.Promotions.SDK 10.0.0-rc-01",
+      "Znode10.Libraries.Extensions.Observability 10.0.0-rc-01"
+    ],
+    "context_per_kb": "Context.PromotionBag (admin settings, user-defined attributes, coupons, promotion name, promo code); cart items, subtotal, quantity; cart UserId, ProfileId, PortalId, OrderId; ServiceProvider DI; SDK helpers for product/category/brand/catalog lookups (KB article, read through a summary: 70-80%)",
+    "deployment_per_kb": "znode deploy extension -> Sync in Admin > Extension Observability -> register the promotion type in Admin > Dev Center > Promotion Settings (Class Name = ClassName in code, case-sensitive) -> create the promotion in Marketing > Promotions",
+    "verified_by_reflection": {
+      "package": "Znode10.Libraries.Promotions.SDK 10.0.0-rc-01 (read with .NET reflection and IL on 2026-10-10)",
+      "CartPromotionTypeBase": "abstract Calculate(int? couponIndex, IReadOnlyList<IPromotionInfo> allPromotions); public props Name, Description, ClassName, Precedence, Context, ServiceProvider; virtual PreSubmitOrderProcess(), PostSubmitOrderProcess(); protected GetCartSubTotal(), GetCartQuantity() (decimal), GetQuantityOrdered(productId), IsDiscountApplicable(currentDiscount, finalPrice), CreatePromoDiscount(decimal amount, DiscountLevelCode level), CreateCouponDiscount(couponCode, amount, ...)",
+      "CreatePromoDiscount": "takes an ABSOLUTE amount, not a percentage: compute a percentage yourself",
+      "GetCartQuantity": "sum of line quantities plus selected group-product quantities; add-ons not counted (from IL)",
+      "IPromotionContext": "Cart (IPromotionCart), PromotionBag (IPromotionBag), Helper (IPromotionCalculationHelper), GetPromotionsByType(...)",
+      "IPromotionCart": "SubTotal, PortalId, ProfileId, OrderId, UserId, IsAnyPromotionApplied, CartItems, Coupons, GetTotalItemCount(), GetMaximumApplicableDiscountOnLineItem(...), GetDiscountAppliedSequence(code)",
+      "IPromotionBag": "PromotionId, PortalId, ProfileId, Discount, MinimumOrderAmount, Required*MinimumQuantity, DiscountedProductQuantity, coupon flags, PromoCode, PromotionMessage, PromotionName, PromotionTypeId, BuyingQuantity, DiscountedQuantity, MaxQtyToDiscount, MinimumWeight, Coupons. It has NO Attributes member",
+      "IPromotionInfo": "has Attributes (IReadOnlyList<PromotionAttributeInfo>), Discount, OrderMinimum, QuantityMinimum, ClassName, ClassType",
+      "IExtensionLogger": "Znode.Libraries.Extensions.Observability.Services, package 10.0.0-rc-01: BeginLog, CommitAsync, LogInformationAsync, LogWarningAsync, LogErrorAsync(extensionName, className, method, Exception, executionTimeMs, correlationId) and LogErrorAsync(ExtensionLog, Exception). No Verbose level."
+    },
+    "shopper_context_verified": "The promotion context exposes only ids for the shopper (UserId, ProfileId, PortalId, OrderId on IPromotionCart). No account or account-group property exists on IPromotionCart, IPromotionBag or IPromotionContext in this package version.",
+    "kb_conflict": "The KB Promotion Extensibility Developer Guide sample reads Context.PromotionBag.Attributes[...]; IPromotionBag has no Attributes member in 10.0.0-rc-01 (IPromotionInfo does). Follow the package; do not copy that sample.",
+    "demo_reference": "A worked, tested example (percentage off the order subtotal at a minimum item count) was built and unit-tested in demo request ND-DEMO-003 on 2026-10-10: 24 xUnit tests passed; engine behaviour NOT verified live."
+  },
+  "evidence": [
+    {
+      "repo": "sdk",
+      "path": "Extensions/Znode.Libraries.Promotions.Custom/FlatTenDollarPromotion.cs",
+      "note": "the only sample: flat order-level amount"
+    },
+    {
+      "repo": "sdk",
+      "path": "Extensions/Znode.Libraries.Promotions.Custom/Znode.Libraries.Promotions.Custom.csproj",
+      "note": "package references"
+    },
+    {
+      "repo": "package",
+      "path": "Znode10.Libraries.Promotions.SDK 10.0.0-rc-01: CartPromotionTypeBase, IPromotionContext, IPromotionCart, IPromotionBag, IPromotionInfo",
+      "note": "members listed in contract.verified_by_reflection"
+    }
+  ],
+  "docs": [
+    {
+      "title": "Promotion Extensibility Developer Guide",
+      "url": "https://support.znode.com/support/solutions/articles/43000790288-promotion-extensibility-developer-guide"
+    },
+    {
+      "title": "Managing Promotions and Coupons",
+      "url": "https://support.znode.com/support/solutions/folders/43000598141"
+    }
+  ],
+  "apis": [],
+  "limitations": [
+    "Profile-based scoping exists in the standard promotion configuration: check whether a user profile can stand in for the account group before writing code (verdict may then be Supported)",
+    "Packages are release-candidate versions in the sample",
+    "Verified by reflection: the shopper is available only as ids (UserId, ProfileId, PortalId). An account-group discount therefore needs an id-based lookup through ServiceProvider (a Znode client or service) that no source has shown; until verified the answer for 'discount by account group' is: use a price list or a profile-scoped promotion, or ask Znode"
+  ],
+  "known_issues": [],
+  "platform_change_if": [
+    "the required condition is not exposed to promotion extensions",
+    "the discount must apply at a calculation stage the Promotions SDK does not offer"
+  ],
+  "verification": {
+    "status": "partial",
+    "sdk_commit": "7e30a61",
+    "webstore_commit": "f90ca894d",
+    "date": "2026-10-10",
+    "unverified": [
+      "any documented way to look up account or account-group data from inside Calculate (ServiceProvider services are not documented)",
+      "line-level and shipping-level discount results (only OrderLevelDiscount is in the sample)",
+      "engine behaviour at run time: stacking, caps, when Calculate is called (code-only; not verified on an environment)"
+    ]
+  }
+}

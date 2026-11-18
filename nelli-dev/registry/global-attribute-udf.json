@@ -1,0 +1,49 @@
+{
+  "id": "global-attribute-udf",
+  "title": "User-defined fields (global attributes) on non-product entities",
+  "class": "supported",
+  "extension_type": "configuration",
+  "summary": "A custom field defined once per entity type (store, account, user, promotion, voucher, order, form and about 30 others) whose value is stored per record. Core v2 reads and writes values but checks little; the Webstore shows nothing by itself except Forms.",
+  "when_to_use": [
+    "one extra value per store, account or user",
+    "extra fields on a custom form"
+  ],
+  "not_for": [
+    "per-product data (PIM)",
+    "rows or lists (Custom Table)",
+    "anything searched or filtered on the site"
+  ],
+  "evidence": [
+    {
+      "repo": "package",
+      "path": "skills/config-global-attributes/SKILL.md",
+      "note": "ten key facts and decision guide"
+    }
+  ],
+  "limitations": [
+    "Value write cannot clear a value",
+    "Required, length, pattern, range and uniqueness are not validated by the API",
+    "Not covered by the XSS validation: encode on output"
+  ],
+  "platform_change_if": [
+    "a new entity type for UDFs",
+    "search or facet on a custom field"
+  ],
+  "verification": {
+    "status": "partial",
+    "sdk_commit": "n/a",
+    "webstore_commit": "n/a",
+    "date": "2026-10-19",
+    "unverified": [
+      "whether a group assigned on Entity Attributes alone shows on a record",
+      "which Webstore calls read the published store UDF snapshot"
+    ]
+  },
+  "znode_versions": [
+    "10.x"
+  ],
+  "contract": {},
+  "docs": [],
+  "apis": [],
+  "known_issues": []
+}

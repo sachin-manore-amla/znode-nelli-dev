@@ -1,0 +1,62 @@
+{
+  "id": "event-consumer",
+  "title": "Consume Znode events (message broker)",
+  "class": "customizable",
+  "extension_type": "event-consumer",
+  "znode_versions": [
+    "10.x"
+  ],
+  "summary": "React to Znode domain events by deriving from EventConsumer<ZnodeEvent> (MassTransit over RabbitMQ or Azure Service Bus).",
+  "when_to_use": [
+    "push data to an external system when something changes in Znode",
+    "run side effects after an order, product or account change"
+  ],
+  "not_for": [
+    "changing the outcome of the operation that raised the event (events are after the fact: use a method override for that)"
+  ],
+  "contract": {
+    "language": "C# / .NET 8",
+    "base_type": "EventConsumer<ZnodeEvent>",
+    "method": "override Task Consume(ConsumeContext<ZnodeEvent> context)",
+    "message_fields": "EventModule, EventName, EventPayload",
+    "config": "EventBus.MessageBrokerService (RabbitMQ | AzureServiceBus), RetryCount, RetryInterval, EventRetry",
+    "message_fields_per_kb": "EventDataCode, EventDataId, EventId, EventModule, EventName, EventPayload (JSON string), EventTimeStamp, EventVersion, UserId, Source, TraceId",
+    "registration": "MessageBrokerStartup.RegisterMessageBroker(); extend the existing Consume method (branch on EventModule/EventName); webhooks: Dev Center > Manage Webhook Settings; add the Admin URL to ZnodeAdminURLCorsPolicy for webhook endpoints"
+  },
+  "evidence": [
+    {
+      "repo": "sdk",
+      "path": "Custom.Libraries.Event/Consumers/ZnodeEventConsumers/ZnodeEventConsumer.cs",
+      "note": "consumer class"
+    },
+    {
+      "repo": "sdk",
+      "path": "Custom.Libraries.Event/MessageBroker/MessageBrokerStartup.cs",
+      "note": "broker registration"
+    }
+  ],
+  "docs": [
+    {
+      "title": "Znode Customization - How to use Znode Events",
+      "url": "https://support.znode.com/support/solutions/articles/43000765833-znode-customization-how-to-use-znode-events"
+    }
+  ],
+  "apis": [],
+  "limitations": [
+    "Delivery is asynchronous and at-least-once: make handlers idempotent",
+    "Requires the events feature to be enabled for the environment"
+  ],
+  "known_issues": [],
+  "platform_change_if": [
+    "an event you need is not raised by Znode"
+  ],
+  "verification": {
+    "status": "partial",
+    "sdk_commit": "7e30a61",
+    "webstore_commit": "f90ca894d",
+    "date": "2026-10-09",
+    "unverified": [
+      "the full list of event modules and names and per-event payload schemas (they are in an external spreadsheet that was not readable)"
+    ]
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "id": "direct-data-access",
+  "title": "Direct database access from the SDK (restricted pattern)",
+  "class": "restricted",
+  "extension_type": "restricted",
+  "znode_versions": [
+    "10.x"
+  ],
+  "summary": "The SDK template contains ZnodeDomainService, which uses entity and stored-procedure repositories. This is direct data access, not an API call. CONFLICT: the KB's API Customization Guide states there is no direct database or Entity Framework access from the Custom API; the template nevertheless contains this code. Treat direct data access as NOT SUPPORTED unless Znode confirms otherwise.",
+  "when_to_use": [
+    "only for tables the customer owns (custom data models in Custom.Libraries.Data)"
+  ],
+  "not_for": [
+    "reading or writing Znode core tables: use the Znode APIs, which enforce business rules, caching and tenancy"
+  ],
+  "contract": {
+    "sample": "Custom.Libraries.DataAccessHelper/ZnodeDomain/ZnodeDomainService.cs"
+  },
+  "evidence": [
+    {
+      "repo": "sdk",
+      "path": "Custom.Libraries.DataAccessHelper/ZnodeDomain/ZnodeDomainService.cs",
+      "note": "uses IEntityRepository<ZnodeDomain> and IStoredProcedureRepository"
+    }
+  ],
+  "docs": [
+    {
+      "title": "API Customization Guide (states: no direct database or Entity Framework access)",
+      "url": "https://support.znode.com/support/solutions/articles/43000761402-api-customization-guide"
+    }
+  ],
+  "apis": [],
+  "limitations": [
+    "Bypasses Znode caching and publish behaviour",
+    "May break on upgrade when core schema changes",
+    "Documented as not available (KB) while present in the template: confidence capped at 60% until Znode settles it; do not propose it for Znode data, and ask before using it for customer-owned data"
+  ],
+  "known_issues": [],
+  "platform_change_if": [],
+  "verification": {
+    "status": "verified",
+    "sdk_commit": "7e30a61",
+    "webstore_commit": "f90ca894d",
+    "date": "2026-10-09",
+    "unverified": []
+  }
+}

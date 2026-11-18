@@ -1,0 +1,82 @@
+{
+  "id": "custom-endpoint",
+  "title": "Custom REST endpoint in the Custom API SDK",
+  "class": "customizable",
+  "extension_type": "custom-endpoint",
+  "znode_versions": [
+    "10.x"
+  ],
+  "summary": "Add a controller and service to Custom.Api.Core that calls the Znode APIs through the typed Znode clients and returns a custom response shape.",
+  "when_to_use": [
+    "a storefront or integration needs a response shape the Znode APIs do not return",
+    "combine several Znode API calls into one endpoint",
+    "add business logic around Znode data"
+  ],
+  "not_for": [
+    "changing how Znode itself calculates prices, taxes or promotions",
+    "changing the response of an existing Znode API"
+  ],
+  "contract": {
+    "language": "C# / .NET 8",
+    "pattern": "ControllerBase + [ApiController] + [Route(\"[controller]\")]; service interface registered in CustomDependencyRegistration.RegisterCustomDI; Znode clients (for example IOrderClient, ICustomTableClient, ICommerceCollectionsClient) registered there too",
+    "logging": "IZnodeLogging.LogMessage(message, \"CustomAPILoggingComponent\", TraceLevel.Error)",
+    "deployment_per_kb": "Znode deploy CustomAPISDK <Environment> [<SDK path>]; endpoint https://<CustomAPISDKHostedURL>/<Controller>/<Action>; host in the same VNET as the Znode API"
+  },
+  "evidence": [
+    {
+      "repo": "sdk",
+      "path": "Custom.Api.Core/Controllers/CustomSampleEntityController.cs",
+      "note": "controller pattern, error handling, logging"
+    },
+    {
+      "repo": "sdk",
+      "path": "Custom.Api.Core/Services/CustomSampleEntityService.cs",
+      "note": "service pattern"
+    },
+    {
+      "repo": "sdk",
+      "path": "Custom.Api.Core/App_Start/CustomDependencyRegistration.cs",
+      "note": "where services and Znode clients are registered"
+    },
+    {
+      "repo": "sdk",
+      "path": "Custom.Api.Core/Controllers/CustomCPController.cs",
+      "note": "controller that calls the Commerce client through ICustomService"
+    }
+  ],
+  "docs": [
+    {
+      "title": "Developer Documentation - API Development",
+      "url": "https://support.znode.com/support/solutions/folders/43000594918"
+    },
+    {
+      "title": "API Customization Guide",
+      "url": "https://support.znode.com/support/solutions/articles/43000761402-api-customization-guide"
+    }
+  ],
+  "apis": [
+    {
+      "family": "any",
+      "note": "call the Znode API family that owns the data; see api-catalog"
+    }
+  ],
+  "limitations": [
+    "Runs as a separate microservice: it adds a network hop to every call",
+    "Authentication, authorization and ownership checks are the developer's responsibility (see quality-security-checks)",
+    "The SDK has no unit-test project: create one",
+    "KB: changes to Znode's own APIs are not possible from the SDK (they go through a Znode support ticket): that is the Platform Change route"
+  ],
+  "known_issues": [
+    "CustomBaseClient.cs creates a new HttpClient per call and blocks on .Result (see sdk-conventions); do not copy this pattern"
+  ],
+  "platform_change_if": [],
+  "verification": {
+    "status": "verified",
+    "sdk_commit": "7e30a61",
+    "webstore_commit": "f90ca894d",
+    "date": "2026-10-09",
+    "unverified": [
+      "JWT configuration values for a specific environment"
+    ]
+  }
+}

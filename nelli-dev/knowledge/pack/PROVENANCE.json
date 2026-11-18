@@ -1,0 +1,35 @@
+{
+ "source": "central product knowledge repository (private)",
+ "source_commit": "b1c91c9",
+ "built": "2026-10-22",
+ "max_drop": 0.15,
+ "excluded_parts": [
+  "MOD-CUSTOM-SP"
+ ],
+ "stats": {
+  "accounts": {
+   "source_docs": 10,
+   "shipped": 10,
+   "quarantined": 0,
+   "excluded": 0,
+   "lines_dropped": 10
+  },
+  "cms-marketing": {
+   "source_docs": 0,
+   "shipped": 0,
+   "quarantined": 0,
+   "excluded": 0,
+   "lines_dropped": 0
+  },
+  "custom-table": {
+   "source_docs": 33,
+   "shipped": 26,
+   "quarantined": 0,
+   "excluded": 7,
+   "lines_dropped": 24
+  }
+ },
+ "shipped": 36,
+ "quarantined": [],
+ "note": "Scrubbed line by line and re-scanned. A person must review the quarantine list and sign off before release."
+}

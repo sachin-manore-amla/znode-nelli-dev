@@ -1,0 +1,73 @@
+{
+  "id": "plugin-templates",
+  "title": "Payment, shipping and tax plugin templates",
+  "class": "customizable",
+  "extension_type": "plugin",
+  "znode_versions": [
+    "10.x"
+  ],
+  "summary": "Build a provider plugin from the SDK templates; Znode's manager services call it, and Admin configures it from Spec.yml.",
+  "when_to_use": [
+    "a payment gateway, carrier or tax provider that Znode does not ship"
+  ],
+  "not_for": [
+    "changing how Znode orchestrates the managers"
+  ],
+  "contract": {
+    "templates": [
+      "Plugins/Payment/Template",
+      "Plugins/Shipping/Template",
+      "Plugins/Tax/Template"
+    ],
+    "config": "Spec.yml declares the Admin configuration fields",
+    "shipping_response": "ShippingCode, ShippingRate (> 0), ResponseMessage"
+  },
+  "evidence": [
+    {
+      "repo": "sdk",
+      "path": "Plugins/Payment/Template",
+      "note": "payment template"
+    },
+    {
+      "repo": "sdk",
+      "path": "Plugins/Shipping/Template",
+      "note": "shipping template"
+    },
+    {
+      "repo": "sdk",
+      "path": "Plugins/Shipping/Spec.yml",
+      "note": "config manifest"
+    },
+    {
+      "repo": "sdk",
+      "path": "Plugins/Tax/Template",
+      "note": "tax template"
+    }
+  ],
+  "docs": [
+    {
+      "title": "Znode Payment API (v1)",
+      "url": "https://apidocs.znode.com/"
+    }
+  ],
+  "apis": [
+    {
+      "family": "payment"
+    }
+  ],
+  "limitations": [
+    "Never log or store card data or provider secrets outside the plugin configuration set"
+  ],
+  "known_issues": [],
+  "platform_change_if": [],
+  "verification": {
+    "status": "partial",
+    "sdk_commit": "7e30a61",
+    "webstore_commit": "f90ca894d",
+    "date": "2026-10-09",
+    "unverified": [
+      "tax and payment interface requirements beyond the templates",
+      "how a plugin is installed in Admin"
+    ]
+  }
+}

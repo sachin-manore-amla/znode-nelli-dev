@@ -1,0 +1,58 @@
+{
+  "id": "erp-touchpoint",
+  "title": "ERP connector touchpoints",
+  "class": "customizable",
+  "extension_type": "erp-touchpoint",
+  "znode_versions": [
+    "10.x"
+  ],
+  "summary": "Implement IHasConnectorIntegration and mark methods with [ConnectorTouchPoint] (scheduled) or [ConnectorTouchPoint(Type = \"RealTime\")] (called during the shopper's request).",
+  "when_to_use": [
+    "inventory, price or order synchronization with an ERP",
+    "real-time inventory or price lookups"
+  ],
+  "not_for": [
+    "generic data import/export files (use data exchange processors)"
+  ],
+  "contract": {
+    "language": "C# / .NET 8",
+    "interface": "IHasConnectorIntegration",
+    "attribute": "[ConnectorTouchPoint] / [ConnectorTouchPoint(Type = \"RealTime\")]",
+    "sample": "MockERPConnector"
+  },
+  "evidence": [
+    {
+      "repo": "sdk",
+      "path": "Custom.Libraries.ERPConnector/MockERPConnector/MockERPConnector.cs",
+      "note": "scheduled and real-time touchpoints"
+    }
+  ],
+  "docs": [
+    {
+      "title": "Znode ERP Touch Point API",
+      "url": "https://apidocs.znode.com/"
+    }
+  ],
+  "apis": [
+    {
+      "family": "erp-touchpoint"
+    }
+  ],
+  "limitations": [
+    "Real-time touchpoints sit in the shopper's request path: latency and failure handling are your responsibility"
+  ],
+  "known_issues": [],
+  "platform_change_if": [
+    "a data flow the connector model cannot express"
+  ],
+  "verification": {
+    "status": "partial",
+    "sdk_commit": "7e30a61",
+    "webstore_commit": "f90ca894d",
+    "date": "2026-10-09",
+    "unverified": [
+      "the full touchpoint catalogue and request/response models",
+      "scheduling configuration"
+    ]
+  }
+}

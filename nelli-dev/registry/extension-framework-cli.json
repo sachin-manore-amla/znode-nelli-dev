@@ -1,0 +1,42 @@
+{
+  "id": "extension-framework-cli",
+  "title": "Znode CLI and extension framework",
+  "class": "customizable",
+  "extension_type": "tooling",
+  "summary": "The Znode CLI installs, connects, sets up and deploys customer extensions with a manifest, with observability and version records.",
+  "when_to_use": [
+    "deploying SDK extensions, processors and plugins to the hosted environment"
+  ],
+  "not_for": [
+    "changing Znode core services"
+  ],
+  "evidence": [
+    {
+      "repo": "package",
+      "path": "skills/sdk-extension-framework/SKILL.md",
+      "note": "CLI, manifest, versions"
+    }
+  ],
+  "limitations": [
+    "Deployment path depends on the customer's hosting arrangement"
+  ],
+  "platform_change_if": [
+    "hosting model changes"
+  ],
+  "verification": {
+    "status": "partial",
+    "sdk_commit": "n/a",
+    "webstore_commit": "n/a",
+    "date": "2026-10-19",
+    "unverified": [
+      "CLI command set on the customer's CLI version"
+    ]
+  },
+  "znode_versions": [
+    "10.x"
+  ],
+  "contract": {},
+  "docs": [],
+  "apis": [],
+  "known_issues": []
+}

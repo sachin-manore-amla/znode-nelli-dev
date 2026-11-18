@@ -1,0 +1,60 @@
+{
+  "id": "data-exchange-processor",
+  "title": "Data exchange processor",
+  "class": "customizable",
+  "extension_type": "data-exchange",
+  "znode_versions": [
+    "10.x"
+  ],
+  "summary": "Add an import/export or feed processor, modelled on the processors in Custom.Libraries.DataExchange.",
+  "when_to_use": [
+    "scheduled or on-demand product feeds",
+    "custom file imports into Znode"
+  ],
+  "not_for": [
+    "real-time lookups (use an ERP touchpoint)"
+  ],
+  "contract": {
+    "language": "C# / .NET 8",
+    "samples": [
+      "MockProcessor",
+      "ProductFeed",
+      "StaticInputWithOutputProcessor",
+      "ZnodeProductCategoryAssociation",
+      "DoNothingProcessor",
+      "DummyMultiStepProcessor"
+    ]
+  },
+  "evidence": [
+    {
+      "repo": "sdk",
+      "path": "Custom.Libraries.DataExchange/MockData/MockProcessor.cs",
+      "note": "processor sample"
+    },
+    {
+      "repo": "sdk",
+      "path": "Custom.Libraries.DataExchange/MockData/ProductFeed.cs",
+      "note": "feed sample"
+    },
+    {
+      "repo": "sdk",
+      "path": "Custom.Api.Core/Controllers/CustomDataExchangeController.cs",
+      "note": "endpoint"
+    }
+  ],
+  "docs": [],
+  "apis": [],
+  "limitations": [],
+  "known_issues": [],
+  "platform_change_if": [],
+  "verification": {
+    "status": "partial",
+    "sdk_commit": "7e30a61",
+    "webstore_commit": "f90ca894d",
+    "date": "2026-10-09",
+    "unverified": [
+      "base interface and registration contract",
+      "how a processor is scheduled"
+    ]
+  }
+}
