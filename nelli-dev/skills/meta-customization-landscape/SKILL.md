@@ -18,12 +18,12 @@ Start here. Pick the lightest option that meets the requirement, in the order of
 | 4 | Content and layout | Pages, banners, containers, forms, theme, and footer or header content editors can change in Page Builder (check this before a source change) | Supported by Page Builder and theme, Customizable beyond them | `webstore-cms`, `webstore-page-builder-and-themes`, `webstore-customization` |
 | 5 | Import and Data Exchange | Move data in bulk or on a schedule or event | Supported | `config-import-export`, `sdk-data-exchange` |
 | 6 | Events and webhooks | React after something changed | Customizable | `sdk-events-and-webhooks` |
-| 7 | Method override | Change a total or short-circuit a core method synchronously | Customizable (only listed hooks) | `sdk-method-overrides` |
+| 7 | Method override | Change a total or short-circuit a platform method synchronously | Customizable (only listed hooks) | `sdk-method-overrides` |
 | 8 | Custom API SDK | New endpoint, service, promotion type, processor, Ocelot route, ERP touchpoint | Customizable | `sdk-custom-api`, `sdk-conventions`, `api-catalog`, `api-auth-and-headers` |
 | 9 | Provider plugin | A payment, shipping, tax or address provider not shipped | Customizable | `sdk-provider-plugins` |
 | 10 | Webstore source change | UI or storefront behaviour the widgets and theme cannot do | Customizable, labelled a source customization | `webstore-customization`, `webstore-headless-api` |
 | 11 | Admin customization | A custom Admin page or section | Customizable, with the cautions in the skill | `config-admin-customization` |
-| 12 | Platform change request | Core behaviour, a new entity, hook, event, field type or schema, a new system table (`sdk-custom-tables`: the system-defined flag cannot be set through any endpoint), a column on a core Admin grid | Needs platform change | `sdk-capability-registry` |
+| 12 | Platform change request | Platform behaviour, a new entity, hook, event, field type or schema, a new system table (`sdk-custom-tables`: the system-defined flag cannot be set through any endpoint), a column on a built-in Admin grid | Needs platform change | `sdk-capability-registry` |
 
 Rules: never skip a lighter rung without saying why it does not fit. Prefer configuration over code, events over method overrides when the outcome need not change, and the registry (`nd_registry.py find`) before any claim.
 
@@ -63,7 +63,7 @@ All of these store the data. **Showing it on the storefront or acting on it need
 
 ## Always true
 
-- Nothing changes Znode core services, the database or other tenants.
+- Nothing changes the Znode platform services, the database or other tenants.
 - Settings and flags vary by release: say which version a claim was observed on.
 - Data written to Draft (import, Data Exchange, attributes, overrides) reaches shoppers only after publish.
 - Custom API endpoints need their own authorization; the platform APIs do not enforce ownership for you.

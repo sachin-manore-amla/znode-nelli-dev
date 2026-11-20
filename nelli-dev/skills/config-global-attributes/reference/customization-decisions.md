@@ -21,7 +21,7 @@ Verdict meanings: Supported = configuration only. Customizable = needs SDK or We
 | Per-store value for a B Store | Supported | B Store entity UDF, saved against the B Store (refreshes the portal cache) |
 | A new entity type (for example UDFs on shipping rules or on carts) | Needs platform change | Entity types are created by Znode. Raise a Platform Change Request |
 | Edit a field's type or entity after creation | Needs platform change or rebuild | Create a new field, migrate values with the API, delete the old field |
-| Make the product behave differently because of a UDF value | Customizable | SDK endpoint, event consumer (`UserDefinedField` Updated from Admin saves) or method override. Never change core services |
+| Make the product behave differently because of a UDF value | Customizable | SDK endpoint, event consumer (`UserDefinedField` Updated from Admin saves) or method override. Never change platform services |
 | Sanitise or validate UDF values server-side | Customizable | The API does not check Required, pattern or length on write. Validate in your own endpoint before calling `PUT /v2/global-entity-attributes` |
 | Clear a UDF value by API | Restricted until verified | The v2 write rejects blank values. Use the Admin, or confirm a supported way with Znode |
 | Direct database writes to UDF values | Restricted | Allowed only for customer-owned data and with the developer's approval. Cache and events would be bypassed |

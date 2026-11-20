@@ -1,6 +1,6 @@
 ---
 name: config-admin-customization
-description: How to customize the Znode Admin Console without changing core code - Dev Center > Admin Customizations (custom pages in the menu and custom sections inside 20 supported entity screens, content type URL or RawHTML/iFrame, macros, role gating, sequence), the Custom API SDK route that serves the page (Custom.Admin.Core, CustomAdmin controllers and views, CORS, Basic auth header), limits, validation messages, security behaviour and the verdict guidance (custom page vs custom section vs Custom API-backed page vs platform change). Load it for any request to add a screen, tab, panel or extra field area to the Admin Console, or when a custom page or section does not show, is blank or is blocked.
+description: How to customize the Znode Admin Console without changing platform code - Dev Center > Admin Customizations (custom pages in the menu and custom sections inside 20 supported entity screens, content type URL or RawHTML/iFrame, macros, role gating, sequence), the Custom API SDK route that serves the page (Custom.Admin.Core, CustomAdmin controllers and views, CORS, Basic auth header), limits, validation messages, security behaviour and the verdict guidance (custom page vs custom section vs Custom API-backed page vs platform change). Load it for any request to add a screen, tab, panel or extra field area to the Admin Console, or when a custom page or section does not show, is blank or is blocked.
 user-invocable: false
 ---
 

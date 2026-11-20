@@ -38,10 +38,10 @@ Review only the developer's recorded Webstore project. Read `webstore-customizat
 
 ## 7. Deviations from recommended practice
 - Hand-rolled auth or session handling instead of the repo's; calls from the browser straight to the gateway; business rules duplicated in the Webstore that belong in a Custom API; edits to built output; a front end that bypasses the BFF.
-- A need that only a Znode core change could meet is reported as a platform change request, not worked around.
+- A need that only a Znode platform change could meet is reported as a platform change request, not worked around.
 
 ## Grading
-- **Blocker:** unauthenticated route that exposes or changes customer data; secret exposed to the browser; XSS sink with unsanitized input; a core-change recommendation; a change that breaks the build.
+- **Blocker:** unauthenticated route that exposes or changes customer data; secret exposed to the browser; XSS sink with unsanitized input; a platform-change recommendation; a change that breaks the build.
 - **Should fix:** level 3 change where level 2 works; N+1 or request waterfalls on a hot path; floating or missing lockfile dependencies; wrong or legacy API usage; untested new logic.
 - **Suggestion:** structure, naming, minor bundle size, Low findings.
 Below 85% confidence: mark `needs confirmation (NN%)`. Never write "secure": write "no Blocker found by these checks" and list what was not checked.

@@ -17,4 +17,4 @@ Promotion setup after deploy: Sync, verify the extension is listed without load 
 No direct database or Entity Framework access (the SDK template contains data-access projects: do not rely on them); changes to Znode's own APIs go through a support ticket; host in the same network as the Znode API. Extension processors and promotion types run inside Znode, so a slow or failing extension affects the user path.
 
 ## Verdicts
-Anything that fits the table is Customizable. Anything that needs a hook that is not in the table (a new promotion scope, a checkout step, a core API behaviour) is **Needs platform change** unless a method override covers it (`sdk-method-overrides`).
+Anything that fits the table is Customizable. Anything that needs a hook that is not in the table (a new promotion scope, a checkout step, a built-in API behaviour) is **Needs platform change** unless a method override covers it (`sdk-method-overrides`).

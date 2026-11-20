@@ -1,12 +1,12 @@
 ---
 name: sdk-custom-api
-description: The znode10-customapi-sdk extension template - its project layout, the five extension points (custom endpoints, event consumers, ERP connector touchpoints, data exchange processors, Ocelot routes), key appsettings values and deployment. Use when building any customisation on top of Znode instead of modifying core code.
+description: The znode10-customapi-sdk extension template - its project layout, the five extension points (custom endpoints, event consumers, ERP connector touchpoints, data exchange processors, Ocelot routes), key appsettings values and deployment. Use when building any customisation on top of Znode instead of modifying platform code.
 user-invocable: false
 ---
 
 # Znode Custom API SDK
 
-An **ASP.NET Core microservice template** that acts as a customisable overlay on the core Znode API. Integrators add controllers, event consumers, ERP connectors and data-exchange processors here — **never modify core Znode**.
+An **ASP.NET Core microservice template** that acts as a customisable overlay on the Znode API. Integrators add controllers, event consumers, ERP connectors and data-exchange processors here — **never modify the Znode platform**.
 
 It sits downstream of the core API and calls it through the `Znode.Engine.Api.Client` NuGet packages.
 

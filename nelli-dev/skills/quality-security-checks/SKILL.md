@@ -33,7 +33,7 @@ python ${CLAUDE_PLUGIN_ROOT}/scripts/scripts\nd_scan_customer_safety.py <changed
 | CORS | Restricted to the storefront origin(s) in production | `AllowAnyOrigin()` left in a deployable configuration |
 | Webhooks and overrides | Incoming calls validate the shared secret (`SecretKey`) and reject mismatches; handlers are idempotent | Unvalidated callback endpoint |
 | Dependencies | No Critical or High known vulnerabilities in packages the change adds | Audit reports Critical/High |
-| Direct data access | Only customer-owned tables (registry `direct-data-access`) | Core tables read or written directly |
+| Direct data access | Only customer-owned tables (registry `direct-data-access`) | Platform tables read or written directly |
 
 ## 3. Severity and gate
 

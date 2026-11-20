@@ -1,13 +1,13 @@
 ---
 name: sdk-method-overrides
-description: The Znode Method Override feature (Dev Center > Method Override), a synchronous webhook that Znode calls from inside a core method so your service can change a calculation result, change receipt or email content, or replace default behaviour. Covers the real list of overridable hooks (six in 10.x), how to register one in Admin, the exact request and callback envelope (ResponsePayload, ExtendedRequestPayload, WebHookURL, SecretKey, SkipExecution), timeouts and failure behaviour, security, testing and when to choose a method override instead of an event, a promotion extension, a price list or a plugin. Load it for any requirement such as "change a total after calculation", "adjust shipping or tax result", "customise the order receipt or quote email body", or "override a tax customer code".
+description: The Znode Method Override feature (Dev Center > Method Override), a synchronous webhook that Znode calls from inside a platform method so your service can change a calculation result, change receipt or email content, or replace default behaviour. Covers the real list of overridable hooks (six in 10.x), how to register one in Admin, the exact request and callback envelope (ResponsePayload, ExtendedRequestPayload, WebHookURL, SecretKey, SkipExecution), timeouts and failure behaviour, security, testing and when to choose a method override instead of an event, a promotion extension, a price list or a plugin. Load it for any requirement such as "change a total after calculation", "adjust shipping or tax result", "customise the order receipt or quote email body", or "override a tax customer code".
 user-invocable: false
 ---
 
 # Znode Method Overrides
 
 ## What it is
-A **method override** is a registered HTTP endpoint that Znode calls **synchronously** at a fixed point inside a core operation. Your endpoint receives the data, may change it, and may tell Znode to skip its default step (`SkipExecution`). It is not a compiled plugin and not a dependency-injection replacement. All logic lives in your own service (normally the Custom API SDK).
+A **method override** is a registered HTTP endpoint that Znode calls **synchronously** at a fixed point inside a platform operation. Your endpoint receives the data, may change it, and may tell Znode to skip its default step (`SkipExecution`). It is not a compiled plugin and not a dependency-injection replacement. All logic lives in your own service (normally the Custom API SDK).
 
 Vocabulary people confuse:
 | Term | Meaning |

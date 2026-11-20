@@ -35,7 +35,7 @@ Warehouses also serve as the **shipping origin** address for carrier rate calcul
 | Backorder Quantity | **Not wired to backorder logic at all** |
 | Backorder Expected Date | **Not wired to backorder logic at all** |
 
-> The KB is explicit: these two fields "are **not bound to the Backorder functionality**" and exist so project teams can **customise** backorder behaviour on top of them. Nothing in core Znode reads them — do not assume they gate purchasing. The actual backorder switch is the per-product Out-of-Stock option below.
+> The KB is explicit: these two fields "are **not bound to the Backorder functionality**" and exist so project teams can **customise** backorder behaviour on top of them. Nothing in the standard Znode platform reads them — do not assume they gate purchasing. The actual backorder switch is the per-product Out-of-Stock option below.
 
 Admins may update Quantity On Hand, Re-Order Level and Warehouse, and may delete an inventory record, but **cannot change the SKU**.
 

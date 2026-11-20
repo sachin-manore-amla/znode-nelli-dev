@@ -1,6 +1,6 @@
 # Nelli-Dev: the Znode customization engineer
 
-Nelli-Dev helps customer and partner developers build customizations on Znode using only what customers receive: the Custom API SDK, the Webstore source, their hosted development environment, the Knowledge Base and the API reference. It turns a requirement into a validated, secure implementation, recommends APIs and builds working curls, and reviews customization code. It never changes Znode core services and never asks for database access.
+Nelli-Dev helps customer and partner developers build customizations on Znode using only what customers receive: the Custom API SDK, the Webstore source, their hosted development environment, the Knowledge Base and the API reference. It turns a requirement into a validated, secure implementation, recommends APIs and builds working curls, and reviews customization code. It never changes the Znode platform services and never asks for database access.
 
 It is a Claude Code plugin. Start with `/nelli-dev:setup`.
 

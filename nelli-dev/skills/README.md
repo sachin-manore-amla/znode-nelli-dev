@@ -1,8 +1,8 @@
 # Nelli-Dev skills index
 
-Knowledge for the Nelli-Dev agent. Skills are plain markdown (`<skill>/SKILL.md`). The agent preloads a small core and reads the rest in full before relying on them. A skill is never cited unread.
+Knowledge for the Nelli-Dev agent. Skills are plain markdown (`<skill>/SKILL.md`). The agent preloads a small starter set and reads the rest in full before relying on them. A skill is never cited unread.
 
-**Provenance.** Skills marked *adapted* were copied from the Znode in-house knowledge base and scrubbed of internal-only content (database objects, core repositories, internal hosts and process). Skills marked *new* were written for this agent from the Custom API SDK and Webstore source. Adapted skills have **not** all been re-verified against the customer-facing KB: treat them at "skill only" confidence (50-70%) until a person has verified them, and say so.
+**Provenance.** Skills marked *adapted* were copied from the Znode in-house knowledge base and scrubbed of internal-only content (database objects, platform source repositories, internal hosts and process). Skills marked *new* were written for this agent from the Custom API SDK and Webstore source. Adapted skills have **not** all been re-verified against the customer-facing KB: treat them at "skill only" confidence (50-70%) until a person has verified them, and say so.
 
 ## Core (preloaded)
 

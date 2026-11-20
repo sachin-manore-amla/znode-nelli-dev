@@ -8,7 +8,7 @@ user-invocable: false
 
 A Custom Table lets an administrator define a small table of their own (a key, a name, columns called fields) and fill it with rows, through Dev Center, the API or a CSV import. No code is needed to create or fill one. Znode stores it as a real table with real columns, so a unique field is a true uniqueness guarantee.
 
-**It is for reference data, mappings, lookups, flags and light extensions.** The KB says so directly: custom tables are not a relational database and are not for core business data. Nothing in the storefront reads a custom table by itself: showing its data on a page needs a custom endpoint, a Webstore change, or one of the built-in features that use a system table.
+**It is for reference data, mappings, lookups, flags and light extensions.** The KB says so directly: custom tables are not a relational database and are not for platform business data. Nothing in the storefront reads a custom table by itself: showing its data on a page needs a custom endpoint, a Webstore change, or one of the built-in features that use a system table.
 
 Verified on a Znode 10 development environment (2026-10-05 and 2026-10-08, 10.14.x builds), in the product source, in the public KB and in the published API spec. Behaviour changes between releases (see `reference/known-behaviours.md`, release notes): confirm on the customer's version before promising an edge case.
 
