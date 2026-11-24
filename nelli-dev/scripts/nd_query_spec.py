@@ -614,7 +614,7 @@ def cmd_curl(args) -> None:
             lines.append(f'AUTH="Basic $(printf \'%s\' "${variable}" | base64 -w0)"')
         elif mode == "bearer":
             lines.append(f'AUTH="Bearer ${variable}"')
-        cmd = [f"curl -sk -X {verb.upper()} {sh_literal(url)}"]
+        cmd = [f"curl -s -X {verb.upper()} {sh_literal(url)}"]
         if mode in ("basic", "bearer"):
             cmd.append('-H "Authorization: $AUTH"')
         cmd += [f"-H {sh_literal(f'{n}: {v}')}" for n, v in headers]
@@ -631,7 +631,7 @@ def cmd_curl(args) -> None:
             lines.append('$auth  = "Basic " + [Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes($basic))')
         elif mode == "bearer":
             lines.append(f"$auth  = \"Bearer \" + [Environment]::GetEnvironmentVariable('{variable}', 'User')")
-        cmd = [f"curl.exe -sk -X {verb.upper()} {ps_literal(url)}"]
+        cmd = [f"curl.exe -s -X {verb.upper()} {ps_literal(url)}"]
         if mode in ("basic", "bearer"):
             cmd.append('-H "Authorization: $auth"')
         cmd += [f"-H {ps_literal(f'{n}: {v}')}" for n, v in headers]

@@ -1,154 +1,61 @@
 ---
 name: commerce-returns
-description: Znode returns and RMA - the Return/Cancellation equivalence, order and line-item eligibility with quantity math, return and line-item statuses, the exact Return Total and Voucher allocation formulas, the order fields frozen while a return is open, and the order snapshot taken at placement. Use when working on returns, refunds, RMA configuration or return eligibility.
+description: Znode returns and cancellations (one feature, Return equals Cancellation) - who can start one and where, eligibility of orders and line items with the quantity rules, the RMA duration setting, return and line-item statuses and their rules, the Return Total and voucher allocation formulas, locked order fields, the values frozen at order placement, notification emails, what Znode does not do (no automatic refund, no automatic voucher credit) and the customization verdict per need. Load it for any return, cancellation, RMA, refund or return-eligibility requirement and when a Create Return button is disabled.
 user-invocable: false
 ---
 
-# Znode Returns / RMA
+# Returns and cancellations
 
-Verified against the Znode KB (Creating A Return · Managing Returns · Eligibility Criteria), 2026-09-23.
+Sources: Znode Knowledge Base articles Creating A Return, Managing Returns, Eligibility Criteria For Creating Order Return/Cancellation Requests Via Returns, Understanding Default Email Templates (read in full 2026-11-23). No exported API spec for returns was available: API statements are unverified. A live shared FAQ "Returns & Refunds Answers" may override the KB for business rules: if your team has it, check Planned, Open or Tentative markers there first. Confidence 85 for KB behaviour; the KB itself has inconsistencies, listed below.
 
-> **There is no difference between a Return and a Cancellation.** Line items that are **shipped** are Return items; line items that are **not shipped** are Cancellation items. One feature, one screen, one set of rules.
+> A Return and a Cancellation are the same feature. **Shipped** line items are returns; **not shipped** line items are cancellations. One screen, one set of rules. (KB 85)
 
-## Initiation
+## Fourteen facts that matter
+1. A single order can have **multiple returns**. (KB 85)
+2. Who starts one: Admin users (guest or registered buyer), registered buyers (login required), admins impersonating a buyer (Customers > Users > Manage User), guest buyers (Track Order page only). (KB 85)
+3. Admin entry: OMS > Orders, **Create Return** icon on the list, or the button on Manage Order. Reason For Return is asked on the admin form; buyers enter notes only. (KB 85)
+4. Every create produces a Return, shows a Return Receipt and sends an email to the admin and the buyer. (KB 85)
+5. **RMA duration** (Admin > System Settings > RMA Configuration) is checked per line item: Submitted items from the Order Date, Shipped items from the Shipped Date (Order Date if none). (KB 85)
+6. Eligibility is checked at order level first, then at least one eligible line item must exist (`reference/eligibility-and-quantities.md`). (KB 85)
+7. Return statuses: **Submitted** (default), **In Review**, **Received**, **Approved**, **Rejected**, **Refund Processed**. In Review and Received are informational only. (KB 85)
+8. Approved needs all line items Approved, or at least one Approved and the rest Rejected; Rejected needs all Rejected; Refund Processed only after the return was saved Approved. Approved and Rejected are final once saved. (KB 85)
+9. Approved line items and their confirmed quantities are removed from the order's Products Ordered list. (KB 85)
+10. **Znode does not refund automatically.** The refund (Return Total minus Voucher Amount) is processed manually outside Znode; vouchers are not credited back automatically. (KB 85)
+11. Totals use **values saved on the order at placement**, never live product data. (KB 85)
+12. While any return on the order is incomplete, Order Status, Shipping Type, Shipping Address zip, Coupon, Voucher, Tax Exemption, CSR Discount and Line Item Status cannot be changed. (KB 85)
+13. Return To address is the store's default warehouse; From is the buyer's shipping address on the order. (KB 85)
+14. Customer details on a return are fixed at order placement; later user edits do not update it. (KB 85)
 
-| Initiator | Where | Reason For Return? |
+## KB inconsistencies to treat carefully
+- "Partially Approved" is listed as a complete status in Eligibility Criteria but is not a selectable status in Managing Returns: treat as derived, confirm on your environment.
+- Managing Returns says handling charges are not considered for returns while its Return Total formula includes them.
+- Managing Returns uses "Return Processed" once where it means Refund Processed.
+- Eligibility Example 3 (10 ordered, 7 expected, 6 confirmed, 4 eligible) subtracts the confirmed quantity: the article does not explain it.
+
+## Nelli-Dev decision guide
+| Requirement | Verdict | Route |
 |---|---|---|
-| Admin / CSR | `OMS > Orders` → Create Return icon, or Manage Order → Create Return | **Yes — step 3** |
-| Registered buyer | Track Order, Order History, or Returns History (login required) | **No** — notes only |
-| Guest buyer | Track Order only | **No** — notes only |
+| Change the return window | Supported | RMA Configuration (days) |
+| Let guests return | Supported | Track Order page Create Return |
+| Require a reason from buyers | Needs platform change / unverified | Buyer form has notes only; capture a reason in your own Webstore UI and store it as a return note (route unverified) |
+| Auto-approve returns | Customizable, unverified | Custom code calling the return update operation; find it in the API reference; not documented in the KB |
+| Trigger the refund at the payment gateway | Customizable | The KB says refunds happen outside Znode; integrate your ERP or gateway on the Refund Processed status (use an event if documented, else polling; ask Znode) |
+| Restore voucher balance automatically | Customizable, unverified | Update the voucher through its API after approval (`commerce-vouchers`) |
+| Restocking fee or return label charge | Partly supported | Unchecking **Return Shipping** moves the line's shipping to **Return Charges** (not refunded); a custom fee is Customizable via a method override only where a hook exists (none for returns documented) |
+| Block returns for certain products | Needs platform change | No product-level rule is documented; handle in your own storefront UI |
+| Notification wording | Supported | Edit the five return templates (`reference/statuses-and-totals.md`, `config-notifications`) |
+| Return reports | Customizable | Reports or API read of returns (`config-import-export`, reports articles not read) |
+| Send return data to an ERP | Customizable | Events or webhooks (`sdk-events-and-webhooks`); a return event is not documented: ask Znode |
 
-Admin can also create a return *as* a registered buyer by impersonating from `Customers > Users > Manage User`. Submitting always creates the return, shows a Return Receipt, and emails both the admin and the buyer.
+## Pitfalls
+- Expecting Approved to pay anything: it only records the decision.
+- Counting Expected instead of Confirmed quantity when computing what can still be returned.
+- Changing the order (coupon, voucher, shipping type) while a return is open: it is locked.
+- Editing a product and expecting existing returns to change.
+- Disabling a line item that sits in an incomplete return (the KB says not to).
 
-A single order can have **multiple** returns.
+## Reference files
+- `reference/eligibility-and-quantities.md` – order and line-item eligibility, RMA duration, quantity examples, entry points.
+- `reference/statuses-and-totals.md` – statuses, line-item rules, Return Total, voucher allocation, saved order values, locked fields, shipping and tax rules, notifications, buttons.
 
-## RMA duration (return window)
-
-Configured at `Admin > System Settings > RMA Configuration`. Checked **per line item**, by line item status:
-
-- Line item **Submitted** → measured from the **Order Date**
-- Line item **Shipped** → measured from the **Shipped Date**; falls back to Order Date when no shipping date exists
-
-## Statuses
-
-| Status | Level | Notes |
-|---|---|---|
-| Submitted | Return + line item | Default on creation |
-| In Review | Return + line item | Informational only — no workflow effect |
-| Received | Return + line item | Informational only |
-| Approved | Return + line item | Terminal for the return |
-| Rejected | Return + line item | Terminal |
-| Refund Processed | Return | Selectable **only** after the return was saved as Approved |
-
-**Selecting Approved** requires either *all* line items Approved, **or** at least one Approved with every remaining one Rejected.
-**Selecting Rejected** requires *all* line items Rejected.
-
-Once Approved or Rejected is saved, the return is locked, and approved line items with their confirmed quantities are **removed from the order's Products Ordered list** (visible in both Admin and the storefront Order Receipt).
-
-> ⚠️ **"Partially Approved" is a KB contradiction.** *Managing Returns* never offers it as a selectable status — the all/some-approved case is just **Approved**. But *Eligibility Criteria* lists `Partially Approved` among the complete statuses and in the eligibility rules. Treat it as **derived state, not a selectable status**, and confirm against the data model before relying on it.
-
-**Complete:** Approved · Partially Approved · Refund Processed · Rejected
-**Incomplete:** Submitted · Not submitted · In Review · Received
-
-## Line-item status semantics
-
-- **Approved** — the **Confirmed Qty** out of the **Expected Qty** is approved. Quantities not confirmed are *conceptually rejected* and are **not shown in the UI**.
-- **Rejected** — all expected quantities rejected. Confirmed Qty is **reset to Expected Qty** and the input is disabled. (Counterintuitive, but that is the documented behaviour.)
-- **Return Shipping** unchecked → that line's shipping amount moves into **Return Charges**, i.e. it is *not* refunded.
-
-## Eligibility
-
-Znode checks the **order** first, then requires at least one eligible **line item**.
-
-**An order is NOT eligible when any of these hold:**
-
-- Status is Cancelled or Failed
-- Every line item has passed its RMA duration
-- No line item has status Shipped or Submitted
-- The order has no line items
-- All line items and quantities already sit in **incomplete** return(s) as Expected Qty
-- All line items and quantities already sit in **completed** return(s) as Confirmed Qty with line item status Approved
-
-**Line-item quantity math:**
-
-- Quantities held in an **incomplete** return are locked out — only the remainder is eligible.
-  *5 ordered, 3 in an incomplete return → 2 eligible. 5 in an incomplete return → line item not eligible at all.*
-- Quantities **rejected** in a completed return become eligible again.
-  *5 ordered, 3 rejected in a completed return → all 5 eligible again.*
-- Approved returns consume only the **Confirmed** quantity.
-  *10 ordered; completed return with 7 Expected / 6 Confirmed Approved → **4** eligible.*
-- When a line item sits in both a complete and an incomplete return, both rules combine.
-
-## Return Summary and Return Total
-
-| Field | Meaning |
-|---|---|
-| Subtotal | Sum of return line item totals |
-| Shipping | Sum of return line item shipping amounts |
-| Tax | Tax on the line item total **and** on the line item shipping total |
-| Discount (subtotal) | Sum of all line item and order discounts |
-| CSR Discount | Calculated CSR discount |
-| Shipping Discount | Sum of all shipping discounts |
-| Return Charges | Non-refunded shipping **plus the tax calculated on that shipping**, for every line whose Return Shipping is unchecked |
-
-```
-Return Total = Subtotal + Shipping + Handling Charges + Tax
-             - Discount(Subtotal) - CSR Discount - Shipping Discount - Return Charges
-```
-
-
-## Voucher allocation
-
-The voucher is refunded **first**, the remainder goes to the payment source.
-
-Because an order can carry several incomplete returns, the Voucher Amount for a return is **calculated only once that return is Approved**:
-
-```
-if (VoucherRemainingOnOrder >= ReturnTotal)  VoucherAmountForReturn = ReturnTotal
-else                                          VoucherAmountForReturn = VoucherRemainingOnOrder
-
-Refunded to payment source = Return Total - Voucher Amount
-```
-
-Voucher Amount is never subtracted from the Order Total — it is treated as a payment method. It cannot be increased automatically, only reduced when `Order Total − Return Charges` falls below it, and that reduction is **not reflected** in the applied-vouchers list under the Voucher input.
-
-> **Znode does not refund automatically.** Refunds are processed manually outside the system, and vouchers are **not** credited back — eligible vouchers must be updated by hand.
-
-## Order fields frozen while a return is open
-
-Until **every** return on the order is complete (Approved / Refund Processed / Rejected), admin cannot change:
-
-Order Status · Shipping Type · Shipping Address zip code · Coupon · Voucher · Tax Exemption · CSR Discount · Line Item Status
-
-## Snapshot taken at order placement
-
-Returns calculate from values frozen at placement, never live values:
-
-Line-item unit price · **included child quantities for every bundle product** · Out Of Stock Options value · shipping amount · tax amount · tax rate (custom tax only) · every line item / order / CSR / shipping discount amount per applied discount · order-level *Calculate Tax On The Discounted Price* · *Include Shipping In Taxes* · handling charges · voucher amount per applied voucher · applied discount types.
-
-Product edits made later never flow into an existing order or its returns.
-
-## Addresses
-
-- **Shipping To** — the default **warehouse** address of the store (where returned items are delivered)
-- **Shipping From** — the buyer's shipping address on the order
-
-## Notifications
-
-| Trigger | Template |
-|---|---|
-| Return created | admin + buyer notification |
-| Any status change saved | `ReturnOrderStatusNotificationForCustomer` |
-| Status changed to **In Review** | `ReturnRequestNotificationForCustomer` |
-| Refund processed | `RefundProcessedNotificationForCustomer` |
-| New return, admin-facing | `NewReturnOrderNotificationForAdmin` |
-
-## KB source
-
-- [Managing Returns](https://support.znode.com/support/solutions/folders/43000598179)
-
-## Related
-`commerce-orders` · `commerce-promotions-and-pricing`
-
-
-For return and refund business rules, use the Znode Knowledge Base article above; where it is silent, mark the answer as unconfirmed.
+Related: `commerce-orders`, `commerce-vouchers`, `commerce-promotions-and-pricing`, `commerce-tax-shipping`, `config-notifications`, `commerce-inventory`.

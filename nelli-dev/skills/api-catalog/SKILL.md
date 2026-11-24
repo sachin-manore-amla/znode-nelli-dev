@@ -30,10 +30,10 @@ Source: the Znode 10 API Reference, https://apidocs.znode.com/ (a Stoplight site
 Place exported spec files at `<workspace>\nd-knowledge\specs\<key>.json` (for example `commerce.json`).
 
 ```powershell
-python ${CLAUDE_PLUGIN_ROOT}/scripts/scripts\nd_query_spec.py specs
-python ${CLAUDE_PLUGIN_ROOT}/scripts/scripts\nd_query_spec.py paths all --grep "<keyword or route>"
-python ${CLAUDE_PLUGIN_ROOT}/scripts/scripts\nd_query_spec.py op commerce "/v1/carts/{cartId}"
-python ${CLAUDE_PLUGIN_ROOT}/scripts/scripts\nd_query_spec.py curl commerce "/v1/carts/{cartId}" --base <gateway url> --set cartId=<id>
+python ${CLAUDE_PLUGIN_ROOT}/scripts/nd_query_spec.py specs
+python ${CLAUDE_PLUGIN_ROOT}/scripts/nd_query_spec.py paths all --grep "<keyword or route>"
+python ${CLAUDE_PLUGIN_ROOT}/scripts/nd_query_spec.py op commerce "/v1/carts/{cartId}"
+python ${CLAUDE_PLUGIN_ROOT}/scripts/nd_query_spec.py curl commerce "/v1/carts/{cartId}" --base <gateway url> --set cartId=<id>
 ```
 
 With a gateway recorded by `nd_env.py`, `--base` can be omitted. Run these from PowerShell (a Unix-style shell rewrites arguments that start with `/`). `curl` builds the Authorization header from the `ZNODE_API_BASIC` / `ZNODE_API_TOKEN` environment variables at run time and never prints a secret. Commands marked `[WRITE]`, `[MONEY]` or `[CARD]` are handed to the developer, never run by the agent.

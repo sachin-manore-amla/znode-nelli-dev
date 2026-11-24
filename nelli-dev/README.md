@@ -54,6 +54,25 @@ Two layers: the agents' instructions, and a PreToolUse hook (`scripts/nd_guard.p
 
 At the start of every run the agent proves the hook is active by reading a deliberately forbidden probe path and checking that the refusal comes from the guard. If it does not, the agent stops.
 
+## Support and feedback
+
+Report problems and knowledge errors through the Znode support site: https://support.znode.com
+
+<support contact to be confirmed by Znode>
+
+First run `/nelli-dev:status` to check your configuration (gateway, credential state, project folders). Then include in your report:
+
+- the plugin version (from `.claude-plugin/plugin.json`)
+- the command you used (for example `/nelli-dev:advise`) and what you asked
+- the confidence line from the answer
+- what you expected and what you got, and for a knowledge error the Knowledge Base page or API reference that shows the correct behaviour
+
+Do not include secrets (tokens, passwords, keys, connection strings) or customer data (names, addresses, order or account details). Remove them from any text, log or screenshot first.
+
+## License
+
+See `LICENSE`. See `KNOWN-LIMITS.md` for what the plugin does not cover and `RELEASE-NOTES.md` for what changed.
+
 ## Maintenance
 
 - `python scripts/nd_verify.py`: layout, commands, agents, hook, guard self-test and registry check must all pass.

@@ -1,112 +1,64 @@
 ---
 name: commerce-tax-shipping
-description: Znode tax and shipping configuration - the Tax Manager and Shipping Manager orchestration services, supported engines and carriers, AvaTax setup fields, tax classes, shipping zones and the four custom shipping rate rule formulas. Use when configuring or debugging tax calculation or shipping rates at checkout.
+description: Znode tax and shipping configuration and customization - tax classes, tax rules (Sales, VAT, GST, PST, HST, precedence, destination), tax plugins (AvaTax configuration sets, import duties, custom tax plugin), shipping methods, shipping types (FedEx, UPS, USPS, Custom), the four custom rate rule formulas, handling charge, store and profile association, carrier account setup, USPS address validation, the custom shipping plugin response contract, and troubleshooting methods that do not appear. Load it for any tax calculation, tax exemption, shipping rate, free shipping, carrier, pickup, delivery-zone or missing-shipping-method requirement, and to choose between configuration, a plugin and a method override.
 user-invocable: false
 ---
 
-# Znode Tax & Shipping
+# Tax and shipping
 
-Both follow the same mirror architecture: **Core API → Manager service → Plugin → Provider**. See `sdk-provider-plugins`.
+Sources: Znode Knowledge Base articles Managing Taxes, Adding a Tax Rule, Associate Products to Tax Class, Managing Tax Processing Plugins, Configure the AvaTax Tax Plugin, Managing Shipping Methods, Associating Shipping Rules with a Shipping Method, Troubleshooting Shipping Methods, Managing Shipping Processing Plugins, Configuring a FedEx Account for Znode Access, Configuring a UPS Account for Znode Access, USPS Address Validation in Znode, Integrating Custom Shipping Plugins, Managing Returns, Configuring Promotion And Coupon Settings (read 2026-11-23). The plugin code contract is in `sdk-provider-plugins`. No exported API spec for tax or shipping was available. Confidence 85 for Admin behaviour; "not documented" is stated where the KB is silent.
 
-## Tax
+## How the pieces fit
+Checkout asks a **tax processor** and a **shipping processor**. Each is a **plugin** installed under System Settings > Plugins, configured through **configuration sets** (global values plus per-store sets), and associated with stores. Native options need no code: the built-in **Sales Tax** rule engine, and **Custom** shipping methods with rate rules. External providers (AvaTax, FedEx, UPS, USPS address validation, or your own plugin) use the plugin route.
 
-### Supported systems
+## Fourteen facts that matter
+1. Tax: **System Settings > Taxes** holds **tax classes**; each class has rules (**Manage Taxes** tab) and associated products (**Associated Products** tab). (KB 85)
+2. A rule has Tax Type, **Include Shipping in taxes**, **Precedence** (processing order), Destination Country, Destination State, optional Zip Code, and value fields for Sales, VAT, GST, PST, HST. Only "Sales tax" is offered by default in the type list. Uniqueness and tie behaviour of Precedence are not documented. (KB 80)
+3. Taxes on a placed order recalculate in real time from the tax settings saved on the order when discounts, vouchers, shipping type, zip or shipping amount change. (KB 85: Managing Returns)
+4. **Calculate Tax On The Discounted Price** (Global Settings > Promotions and Coupon Settings) taxes the post-discount amount. (KB 85)
+5. External tax plugins: System Settings > Plugins > Available Plugins (filter Plugin Type = Tax): **Avatax** and **Custom Developed Tax Plugin**. Activate on the Plugin Information tab; configure under Installed Plugins. (KB 85)
+6. AvaTax **Global Configuration**: Avalara App Name, Exemption Number, "Allow Submissions Of The Tax Requests?". **Configuration Set**: Configuration Code, Name, AvaTax URL (sandbox or live), Company Code, Account Number, Avalara License, Freight Identifier, Prices Are Inclusive of Taxes. Import duties are calculated from the product HS Code and destination (Canada documented); default duty rates live only in Avalara. (KB 85)
+7. Shipping methods: **System Settings > Shipping**; a method must be **associated with the store** (Stores > Manage Store > Shipping Methods) to appear at checkout. (KB 85)
+8. Shipping types: **FedEx**, **UPS** (carrier rates, optional handling charge), **Custom** (rates from Associated Rules), **USPS** (weight limit 70 lb). (KB 85)
+9. Checkout shows methods common to the user's profile(s) and the store; if no overlap, store methods; if the profile has methods but the store has none, **no methods**. (KB 85)
+10. Rate = handling charge + associated rule cost + additional shipping cost per item (the last only through the API). Handling charge is flat, percent of subtotal, or percent of shipping rate, and is not taxed. (KB 85)
+11. Custom rule outside its limits does **not apply**: cost 0. One rule of each type per method. (KB 85)
+12. Znode **filters out $0 shipping rates** today; free shipping through a plugin rate of 0 does not work. (KB 85: Integrating Custom Shipping Plugins)
+13. FedEx and UPS test/production is switched by a Webstore-side setting (`IsFedExRestGatewayTestMode`, `IsUPSRestGatewayTest`) plus store credentials: environment configuration, owned by whoever hosts the application. (KB 85)
+14. USPS address validation is off by default, U.S. addresses only, one configuration set per store, and checkout continues if USPS is unavailable. (KB 85)
 
-| Mode | Description |
-|---|---|
-| Native Sales Tax | Built-in rule engine — Sales Tax, VAT, GST, PST, HST per Country / State / ZipCode |
-| AvaTax (Avalara) | External plugin, real-time REST; supports international import duties |
-| Vertex | Partner plugin (`znode10-plugin-tax-vertex`) |
-| Custom | Microservice implementing `IZnodeTaxPlugin` |
-
-### Tax Manager
-
-```
-Znode Commerce API  --HTTP POST-->  Tax Manager (TaxGatewayController)
-  POST /taxmanager/v1/tax-gateway/calculate                -> CalculateRates()
-  POST /taxmanager/v1/tax-gateway/cancelorder              -> Cancelorder()
-  POST /taxmanager/v1/tax-gateway/returnorderlineitem
-  POST /taxmanager/v1/tax-gateway/presubmitorderprocess
-  POST /taxmanager/v1/tax-gateway/submit                   -> commit the tax document
-```
-
-`TaxGatewayService` inspects `TaxBag.TaxType`: `"SalesTax"` delegates to in-process `IZnodeTaxSalesTax`; anything else is an HTTP call to the external plugin via `IPluginAPIClient`.
-
-Models: `TaxManagerCalculateRequest/Response`, `TaxManagerCancelOrderRequest/Response`, `TaxManagerReturnOrderLineItemRequest/Response`, `TaxManagerPreSubmitOrderProcessRequest/Response`, `TaxManagerCommitTaxRequest/Response`.
-
-### AvaTax configuration
-
-`System Settings > Plugins > Installed Plugins > AvaTax`
-
-**Global:** `Avalara App Name` · `Exemption Number` · `Allow Submissions Of Tax Requests`
-
-**Per-store configuration set:** `AvaTax URL` (sandbox `https://sandbox-rest.avatax.com/api/v2`, production `https://rest.avatax.com/api/v2`) · `Company Code` · `Account Number` · `Avalara License` · `Freight Identifier` (item code for shipping cost) · `Prices Are Inclusive of Taxes`.
-
-On order placement AvaTax **commits** the transaction; `CancelOrder` fires on cancellation.
-
-### Tax classes
-
-1. Create a Tax Class at `System Settings > Taxes > Add New`
-2. Add Tax Rules per Country/State/ZipCode — rates for Sales/VAT/GST/PST/HST and whether shipping is taxable
-3. Associate products at `System Settings > Taxes > Edit > Associated Products`
-
-Tax classes, tax rules (by type) and their SKU and store associations are managed in Admin; the data is exposed through the tax APIs.
-
-Checkout flow: assemble cart → resolve Tax Class per product → invoke the store's active plugin via Tax Manager → native rules match destination + class by precedence, or AvaTax returns line-level tax including import duties → display alongside shipping. A profile flagged **Tax Exempt** is charged no tax.
-
-## Shipping
-
-### Carriers
-
-| Carrier | Type | Notes |
+## Nelli-Dev decision guide
+| Requirement | Verdict | Route |
 |---|---|---|
-| FedEx | Real-time REST | Non-LTL (Ground, Overnight, 2Day) + LTL Freight; separate API keys per service class |
-| UPS | Real-time REST (OAuth2) | Non-LTL + TForce Freight LTL; same credentials for test/prod, only the URL switches |
-| USPS | Plugin | Listed in Available Plugins |
-| Custom | Rules-based | No external API; rates from configured rules |
+| Sales tax by country, state, zip | Supported | Tax class and rules; precedence for overlaps |
+| Tax-exempt customers | Supported | Profile or order Tax Exemption (Managing Returns lists it as a locked order field); AvaTax Exemption Number for provider |
+| Tax by AvaTax | Supported | Configure AvaTax; per-store configuration sets |
+| Another tax provider (for example Vertex or your own) | Customizable | Tax plugin built from the SDK template (`sdk-provider-plugins`); the KB lists only AvaTax and a custom plugin as native |
+| Change tax customer code sent to the provider | Customizable | Method override hook for the tax step (`sdk-method-overrides`) |
+| Flat shipping by weight bracket | Supported | Custom method, Weight-Based Rate rule |
+| Free shipping above a threshold | Supported | Percent Off Shipping promotion 100% with a minimum order amount (`commerce-promotions-and-pricing`); not a $0 plugin rate |
+| Shipping only to some states | Supported | Method Destination Country, State, Postal Code |
+| Different methods for B2B profiles | Supported | Assign methods to the user profile (Accounts & Users > User Profiles) |
+| Pickup or local delivery with fixed price | Supported | Custom method with Fixed Rate Per Item |
+| New carrier or LTL service | Customizable | Custom shipping plugin: service codes, `Spec` configuration, estimate and calculate responses (`reference/custom-shipping-plugin.md`) |
+| Add a handling surcharge after calculation | Customizable | Handling Charge field first; otherwise method override on the calculate step |
+| Hide a method by cart contents | Customizable | Product shipping setting plus method rules; custom logic in a plugin; unverified beyond that |
+| Calculate shipping per item with different origins | Needs confirmation | Warehouse address is the origin; per-item origin routing is not documented |
+| Shipping rate API without a user id | Not supported | The shipping-estimates call needs a valid user id header or may return 404 (KB 80) |
 
-### Shipping Manager
+## Pitfalls
+- Method defined but not associated with the store, or the profile intersection removes it (`reference/shipping.md`, troubleshooting).
+- Custom method with no associated rules is incomplete.
+- Quantity/Weight limits are evaluated on the order line, not the whole order.
+- Expecting $0 rates from plugins.
+- Missing or invalid carrier credentials, sandbox/live mismatch, wrong shipping origin or warehouse address.
+- UPS commercial address override changes rates.
+- Tax class missing on a product: no rule matches; check Associated Products.
+- Handling charges are not part of the tax base and (per Managing Returns) the article is inconsistent about whether returns refund them.
 
-```
-POST /shippingmanager/v1/shipping-gateway/estimates  -> GetShippingEstimates()
-POST /shippingmanager/v1/shipping-gateway/calculate  -> CalculateRates()
-```
+## Reference files
+- `reference/tax.md` – tax classes, rules, plugins, AvaTax, exemption, customization.
+- `reference/shipping.md` – methods, rule formulas, restrictions, carrier setup, address validation, troubleshooting.
+- `reference/custom-shipping-plugin.md` – service registration, configuration, response contract, errors.
 
-Groups the incoming `ShippingBagList` by `ShippingType`, then dispatches **parallel tasks** bounded by a `MaximumAllowedParallelTask` semaphore to each plugin URL. **Rates of $0 are currently filtered out.**
-
-Models: `ShippingManagerEstimatesRequest` → `ShippingManagerEstimateRatesResponse`; `ShippingManagerCalculateRequest` → `ShippingManagerCalculateResponse`.
-
-### Zones
-
-There is no dedicated Shipping Zone entity. Restrictions are set on the **shipping method**: `Destination Country`, `State`, `Shipping Destination Postal Code`.
-
-### Custom rate rules (one of each type per method)
-
-| Rule | Formula | Applies |
-|---|---|---|
-| Weight-Based Rate | `BaseCost + (PerUnitCost x Qty x WeightPerProduct)` | when the **order line total weight** ∈ [Lower, Upper] |
-| Quantity-Based Rate | `BaseCost + (PerUnitCost x Qty)` | when the **order line quantity** ∈ [Lower, Upper] |
-| Flat Rate Per Item | `BaseCost + (PerUnitCost x Qty)` | always, regardless of qty or weight |
-| Fixed Rate Per Item | `BaseCost` | always, regardless of qty or weight |
-
-> **Outside the limits the rule does not apply at all — Shipping Rule Cost = 0**, it does not fall back to Base Cost. Limits are evaluated against the **order line** total, not the whole order.
-
-Rules attach only to a **Custom** shipping type, at `System Settings > Shipping > Edit > Associated Rules`. Each rule type may be associated **once per shipping method**.
-
-`Shipping Rate = Handling Charge + Rule Cost + Additional Shipping Cost Per Item` (the last is API-configurable only, not exposed in Admin).
-
-### Setup and association
-
-FedEx/UPS: create a project at the developer portal → set base URLs and the test/prod toggle in `web.config` (`FedExSandboxURL`, `IsUPSRestGatewayTest`, …) → enter credentials per store at `Stores & Reps > Stores > Shipping Origin`.
-
-Methods are defined globally at `System Settings > Shipping` and must be explicitly associated per store at `Stores > Manage > Shipping Methods` — only associated methods appear at checkout, and the profile intersection rule then applies.
-
-Shipping methods, shipping types, rate rules and their rule types, service codes, and store and SKU associations are managed in Admin.
-
-## KB source
-
-- [Managing Taxes](https://support.znode.com/support/solutions/folders/43000598155)
-- [Managing Shipping (7)](https://support.znode.com/support/solutions/folders/43000598154)
-
-## Related
-`sdk-provider-plugins` · `commerce-checkout-payments` · `commerce-inventory`
+Related: `sdk-provider-plugins`, `sdk-method-overrides`, `commerce-checkout-payments`, `commerce-inventory`, `commerce-promotions-and-pricing`, `config-store`.

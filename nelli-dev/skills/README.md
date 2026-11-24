@@ -29,8 +29,8 @@ Knowledge for the Nelli-Dev agent. Skills are plain markdown (`<skill>/SKILL.md`
 | Integration | `sdk-data-exchange` · `config-import-export` · `api-consumption` · `webstore-headless-api` |
 | Webstore | `webstore-customization` · `webstore-page-builder-and-themes` · `webstore-cms` · `commerce-search-seo` |
 | Admin and portals | `config-admin-customization` · `config-roles-permissions` · `config-commerce-portal` · `config-bstore` · `config-stores-tenancy` |
-| Configuration | `config-global-settings` · `config-store` · `sdk-extension-settings` · `config-notifications` |
-| Commerce behaviour | `commerce-promotions-and-pricing` · `commerce-tax-shipping` · `commerce-checkout-payments` · `commerce-orders-and-checkout-customization` · `commerce-orders` · `commerce-returns` · `commerce-inventory` · `commerce-b2b-accounts` · `commerce-catalog` |
+| Configuration | `config-global-settings` · `config-store` · `sdk-extension-settings` · `config-notifications` · `config-caching` |
+| Commerce behaviour | `commerce-promotions-and-pricing` · `commerce-tax-shipping` · `commerce-checkout-payments` · `commerce-orders-and-checkout-customization` · `commerce-orders` · `commerce-returns` · `commerce-inventory` · `commerce-b2b-accounts` · `commerce-catalog` · `commerce-publish-pipeline` · `commerce-vouchers` · `commerce-brands-and-reviews` |
 | Quality | `quality-testing` · `quality-logging` |
 
 Retired and replaced: old pricing-promotions skill and old vouchers skill (now `commerce-promotions-and-pricing`), old plugins skill (now `sdk-provider-plugins`), old webstore-source skill (now `webstore-customization`).

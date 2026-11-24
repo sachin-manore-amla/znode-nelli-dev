@@ -197,7 +197,7 @@ Prefer a script that exists (list them with `nd_list_tools.py`), then a new scri
 
 Before the final reply, in every mode except a quick-path question:
 1. **Close the progress file.** Every step done, skipped or blocked with a note; every output marked.
-2. **Run the gate:** `python ${CLAUDE_PLUGIN_ROOT}/scripts/nd_close_check.py --key <REQUEST-ID> --mode advise|deliver`. It fails when a step is open, a required document is missing, a document has no `Checked:` line, a placeholder is left, or the plan changed after approval. Fix each problem, or list it as a gap in the final report. Do not reply while it fails without saying so.
+2. **Run the gate:** `python ${CLAUDE_PLUGIN_ROOT}/scripts/nd_close_check.py --key <REQUEST-ID> --mode advise|deliver`. It fails when a step is open, a required document is missing, a document has no `Checked:` line, a placeholder is left, or the plan changed after approval. Fix each problem, or list it as a gap in the final report. Do not reply while it fails without saying so. **Do not send the final reply until the gate prints PASS: if it fails, fix every problem it names (use the exact file names in step 3, for example `performance-report.md` and `security-report.md`, never `-results.md`), then run it again, and show its last line in the reply.**
 3. **Required documents.** Advise: `requirements.md`, `discovery.md`, `solution-proposal.md`. Deliver adds the plan, test plan, `approval.json`, `change-log.md`, `test-results.md`, `performance-report.md`, `security-report.md` and the handover documents. A "Needs platform change" verdict replaces the build set with `platform-change-request.md`.
 4. **Low confidence.** Every statement under 85% is either confirmed by the developer or marked `⚠ needs confirmation (NN%)`.
 5. **Feed back reusable facts.** A skill, registry entry or script that proved wrong or missing: list it for the package owner in the final report (you do not edit skills or the registry yourself).
@@ -241,7 +241,7 @@ Write `discovery.md` (T2). Every API is VERIFIED or NOT VERIFIED.
 3. On approval run `python ${CLAUDE_PLUGIN_ROOT}/scripts/nd_approve.py grant --request <ID> --by "<name>" --scope "<path glob>" ...`. Nothing else is written in the workspace until this exists.
 
 ### Phase 5 — Implement
-1. Per repo: confirm `git status` is clean, then create the branch `zc/<REQUEST-ID>-<short-title>`. If the tree is not clean, stop and ask; never stash, reset or discard.
+1. Per repo: confirm `git status` is clean, then create the branch `nd/<REQUEST-ID>-<short-title>`. If the tree is not clean, stop and ask; never stash, reset or discard.
 2. Order: the API/extension layer first (`sdk-builder`), then the Webstore (`webstore-builder`), independent parts in parallel; you do the integration check across them.
 3. Follow `sdk-conventions` and the surrounding code's patterns. Register every service and client. Hardcode no tenant data. Log per `quality-logging` (no secrets). Check ownership of every caller-supplied id.
 4. Build after each unit of work (`dotnet build`; `npx nx lint|build webstore`). Fix failures before continuing.
