@@ -1,17 +1,17 @@
 ---
 name: review-webstore
-description: Checklist for reviewing Webstore customization code (Next.js and TypeScript) - quality, customization level and upgrade cost, BFF route authentication, performance and caching, API usage, dependency compatibility, and deviations from the recommended customization levels. Use when reviewing Webstore source, a Webstore diff, a widget, theme or BFF route.
+description: Checklist for reviewing the Znode-specific parts of Webstore customization code (Next.js and TypeScript) - Webstore patterns, customization level and upgrade cost, BFF route authentication, caching and publish effects, Znode API usage, dependency compatibility, and deviations from the recommended customization levels. Not for general React or TypeScript style. Use when reviewing Webstore source, a Webstore diff, a widget, theme or BFF route.
 user-invocable: false
 ---
 
 # Review checklist: Webstore customization
 
-Review only the developer's recorded Webstore project. Read `webstore-customization` (the three levels and the ten facts), `quality-security-checks`, `quality-performance-checks`, and the reference files the change touches. Scanner output (`nd_review.py plan`) is leads; confirm each at its `file:line`.
+Review only the developer's recorded Webstore project, and only the files the scope script (`nd_review_scope.py`) marked ZNODE-RELEVANT and you confirmed by reading. Generic React, TypeScript or Next.js review (style, naming, formatting, hooks idioms, general refactoring) is out of scope and is never raised, not even as a Suggestion. Every finding names the Znode rule or knowledge source it rests on (this checklist section, the Webstore knowledge reference, an API spec operation, or a knowledge skill). Read `webstore-customization` (the three levels and the ten facts), `quality-security-checks`, `quality-performance-checks`, and the reference files the change touches. Scanner output (`nd_review.py plan`) is leads; confirm each at its `file:line`.
 
-## 1. Quality and maintainability
-- Follows the repo's patterns: components, BFF routes and API clients where the existing ones live; typed responses; no copy of a base component when a theme override or widget would do.
-- Lint and type-check pass (`reference/build-test-and-known-behaviours.md` has the commands); no `any` spread over API data; no dead code or console logging left in.
-- Tests for new logic (Jest); locale strings in message files, not hard-coded.
+## 1. Webstore patterns (Znode-specific only)
+- BFF routes, API clients and widgets sit where the Webstore's own ones live and call the typed clients; a copy of a base component where a theme override or widget would do is a customization-level finding (section 2).
+- Known behaviours of the Webstore build and the commands to verify a change are in `reference/build-test-and-known-behaviours.md`; a change that breaks the build is a Blocker. Locale strings belong in the message files.
+- New logic has Jest tests (`quality-testing`).
 
 ## 2. Customization level and upgrade cost
 - State the level of each change: 1 configure, 2 extend (widget, theme, new BFF route, new page, Custom API call), 3 change base source (`packages/base-components`, `packages/agents`, `packages/clients`, shared routes). Level 3 must be labelled a source customization with its upgrade-merge cost; a level 3 change where level 2 works is a Should fix.
@@ -43,5 +43,5 @@ Review only the developer's recorded Webstore project. Read `webstore-customizat
 ## Grading
 - **Blocker:** unauthenticated route that exposes or changes customer data; secret exposed to the browser; XSS sink with unsanitized input; a platform-change recommendation; a change that breaks the build.
 - **Should fix:** level 3 change where level 2 works; N+1 or request waterfalls on a hot path; floating or missing lockfile dependencies; wrong or legacy API usage; untested new logic.
-- **Suggestion:** structure, naming, minor bundle size, Low findings.
+- **Suggestion:** Low findings on Znode-specific points (for example a missing cache-tag note). Never style, naming or generic structure.
 Below 85% confidence: mark `needs confirmation (NN%)`. Never write "secure": write "no Blocker found by these checks" and list what was not checked.

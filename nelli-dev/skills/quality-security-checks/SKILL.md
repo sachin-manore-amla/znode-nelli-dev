@@ -11,8 +11,9 @@ Run on the customization's changed files, after tests pass and before handover. 
 ## 1. Scanner (leads, not facts)
 
 ```powershell
-python ${CLAUDE_PLUGIN_ROOT}/scripts/scripts\nd_security_scan.py --repo <repo> --git-diff <base ref> [--audits]
-python ${CLAUDE_PLUGIN_ROOT}/scripts/scripts\nd_scan_customer_safety.py <changed paths>       # secrets and internal references in what you are about to hand over
+python ${CLAUDE_PLUGIN_ROOT}/scripts/nd_security_scan.py --repo <repo> --git-diff <base ref> [--audits]
+python ${CLAUDE_PLUGIN_ROOT}/scripts/nd_scan_customer_safety.py <changed paths>       # secrets and internal references in what you are about to hand over
+python ${CLAUDE_PLUGIN_ROOT}/scripts/nd_secret_scan.py <changed files and the request folder>   # tokens, keys, connection strings, e-mails, host names (exit 1 = finding; values are never printed)
 ```
 
 `--audits` runs `dotnet list package --vulnerable --include-transitive` and `npm audit` (needs network; the guard asks first). The scanner is pattern-based: open every lead at its `file:line`, decide, and record **confirmed**, **false positive (why)** or **accepted by developer**. Where the customer has Semgrep or CodeQL, run it too and attach the output. Never report "no vulnerabilities": report what was checked and what was not.
@@ -28,7 +29,9 @@ python ${CLAUDE_PLUGIN_ROOT}/scripts/scripts\nd_scan_customer_safety.py <changed
 | Input validation | Models are validated (ranges, lengths, allowed values); search/filter text is never concatenated into SQL | String-built SQL, unvalidated file names/paths, unbounded page sizes |
 | Output encoding (Webstore) | No raw HTML from API data; no `dangerouslySetInnerHTML` with unsanitized input | Stored or reflected XSS path |
 | Data protection | No secrets, tokens, card data or personal data in logs, URLs, client storage or `NEXT_PUBLIC_` variables | Any of those appear |
-| Secrets | Credentials come from environment variables or a vault; none are in source, `.env` files in the repo, or generated files | A secret is committed or printed |
+| Secrets | Credentials come from environment variables or a vault; none are in source, `.env` files in the repo, or generated files (`nd_secret_scan.py` exits 0 over the change) | A secret is committed or printed |
+| Spoofed identity | Identity and tenancy (`Znode-UserId`, portal, store, account ids, roles) come from the validated token and server-side context, never from a header or body value the caller can set; generated and test code never copies such headers from a request | A client-supplied identity or tenant value is trusted |
+| Untrusted input into prompts and tools | Text from users, API responses or the knowledge base is never executed, evaluated or used as a path, URL or command without validation | Such text reaches a shell, `eval`, a file path, an outbound URL or a model prompt as an instruction |
 | Transport | HTTPS only; certificate validation never disabled | `rejectUnauthorized: false`, validation callbacks returning true |
 | CORS | Restricted to the storefront origin(s) in production | `AllowAnyOrigin()` left in a deployable configuration |
 | Webhooks and overrides | Incoming calls validate the shared secret (`SecretKey`) and reject mismatches; handlers are idempotent | Unvalidated callback endpoint |

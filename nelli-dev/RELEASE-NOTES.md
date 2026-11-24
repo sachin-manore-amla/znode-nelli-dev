@@ -1,5 +1,20 @@
 # Nelli-Dev release notes
 
+## 0.3.0
+
+Nelli-Dev is now safer, shows what it is doing, and keeps your data on your machine.
+
+### Added in 0.3.0
+- **Znode-only code review.** `/nelli-dev:review` reviews Znode customizations only (SDK extension points, Webstore customizations, Znode API usage, and their security and performance). General style or language review is politely declined.
+- **Session visibility.** `/nelli-dev:status` now shows what the session used: commands, skills and tools, with counts. It stores names and counts only, never your prompts, code or secrets, and token or cost figures are shown only where Claude Code provides them.
+- **Consent, off by default.** `/nelli-dev:setup` asks what, if anything, may be shared. Nothing leaves your machine unless you opt in, and even then Nelli-Dev only writes a file for you to send.
+- **Feedback.** `/nelli-dev:feedback` builds a redacted preview and saves it locally only after you confirm.
+- **Update notice.** At session start Nelli-Dev tells you when a newer version is in your local marketplace copy. It makes no network call and installs nothing.
+- **Cost control.** Heavy commands show an estimate first and ask for a go-ahead above a cap.
+- **Stronger guard and checks.** Writes outside your workspace are blocked or need approval, generated documents are scanned for secrets, and the plugin files are checked against the release manifest at start.
+- **Liability stamp.** Every answer and handover document states the plugin version, knowledge date, confidence and that human review and testing are required before production use.
+- **Privacy and security pages.** See `privacy/DATA-INVENTORY.md` and `SECURITY.md`.
+
 ## 0.2.0
 
 Nelli-Dev now knows more about customizing the Znode platform, and has new areas of knowledge.

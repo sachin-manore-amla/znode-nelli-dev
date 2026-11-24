@@ -1,19 +1,18 @@
 ---
 name: review-sdk
-description: Checklist for reviewing Custom API SDK customization code (C#) - quality and maintainability, SDK compatibility and registration, authentication and ownership, performance, API usage, dependency and version compatibility, and deviations from the recommended customization practice. Use when reviewing SDK code, an SDK diff, or an SDK extension.
+description: Checklist for reviewing the Znode-specific parts of Custom API SDK customization code (C#) - SDK conventions, extension points and registration, authentication and ownership, performance of Znode calls, Znode API usage, Znode package and version compatibility, and deviations from the supported customization routes. Not for general C# or .NET style. Use when reviewing SDK code, an SDK diff, or an SDK extension.
 user-invocable: false
 ---
 
 # Review checklist: Custom API SDK customization
 
-Review only the developer's recorded SDK project. The Znode platform services are never in scope and never the recommendation: the fix is always an SDK-side or supported-extension change.
+Review only the developer's recorded SDK project, and only the files the scope script (`nd_review_scope.py`) marked ZNODE-RELEVANT and you confirmed by reading. Generic C# review (style, naming, formatting, language features, general refactoring) is out of scope and is never raised, not even as a Suggestion. Every finding names the Znode rule or knowledge source it rests on (this checklist section, a registry id, an API spec operation, or a knowledge skill). The Znode platform services are never in scope and never the recommendation: the fix is always an SDK-side or supported-extension change.
 Read `sdk-conventions`, `sdk-custom-api` and the registry entry of the extension point the code uses (`nd_registry.py show <id>`), and `quality-security-checks` / `quality-performance-checks`. Scanner output (`nd_review.py plan`) is leads; confirm each at its `file:line`.
 
-## 1. Quality and maintainability
-- Layering as in the samples: model, service interface and implementation, controller that injects the interface only; no business logic in the controller; no data access in the controller.
-- Names and folders follow the surrounding code; no dead code, copy-pasted blocks or commented-out code; methods small enough to test.
-- Catch blocks log with the SDK logger and either rethrow or return a defined error; no empty catch; `throw;`, not `throw ex;`.
-- Tests: new logic has xUnit tests with the Znode clients mocked (the SDK ships no test project: its absence is a Suggestion, an untested new service is a Should fix).
+## 1. SDK conventions (Znode-specific only)
+- Layering as the SDK samples show it (`sdk-conventions`): model, service interface and implementation, controller that injects the interface; no Znode data access or business rules in the controller. Cite the convention; do not judge style beyond it.
+- Catch blocks around Znode calls log with the SDK logger and rethrow or return the defined error envelope; no swallowed Znode errors.
+- New logic has xUnit tests with the Znode clients mocked (`quality-testing`; the SDK ships no test project: an untested new service is a Should fix).
 
 ## 2. SDK compatibility and implementation patterns
 - Every new service and every Znode client it injects is registered in the dependency registration; an unregistered service fails at run time.
@@ -49,5 +48,5 @@ Read `sdk-conventions`, `sdk-custom-api` and the registry entry of the extension
 ## Grading
 - **Blocker:** a confirmed Critical or High security finding; missing authentication or ownership check; an unregistered service or broken contract (will not run); a platform-change recommendation; data loss.
 - **Should fix:** Medium findings; N+1 or blocking calls on a hot path; wrong or legacy API usage; mixed or floating Znode package versions; untested new logic.
-- **Suggestion:** Low findings, naming, structure, template spots outside the change.
+- **Suggestion:** Low findings on Znode-specific points, template weak spots the change touches. Never style, naming or generic structure.
 Below 85% confidence: mark `needs confirmation (NN%)`. Never write "secure": write "no Blocker found by these checks" and list what was not checked.

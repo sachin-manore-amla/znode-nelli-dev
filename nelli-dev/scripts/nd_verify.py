@@ -16,7 +16,7 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-COMMANDS = ["advise", "ask", "curl", "deliver", "docs", "recommend-api", "review", "setup", "status"]   # PLAN.md 2.1
+COMMANDS = ["advise", "ask", "curl", "deliver", "docs", "feedback", "recommend-api", "review", "setup", "status"]   # PLAN.md 2.1
 AGENTS = ["api-curl-builder", "code-reviewer", "doc-writer", "nelli-dev", "sdk-builder", "test-author", "webstore-builder"]
 failed = 0
 # the only places that may still name the old product: they exist to migrate its data
@@ -70,7 +70,7 @@ def main() -> int:
             bad.append(d.name)
         if fm.get("user-invocable") != "false":
             visible.append(d.name)
-            if d.name not in ("setup", "status"):
+            if d.name not in ("setup", "status", "feedback"):
                 ag = fm.get("agent", "").split(":")[-1]
                 if fm.get("context") != "fork" or ag not in AGENTS:
                     bad.append(d.name + " (fork or agent)")

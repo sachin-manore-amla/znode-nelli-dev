@@ -37,7 +37,7 @@ def path() -> Path:
 
 
 def _empty() -> dict:
-    return {"schema": SCHEMA, "default_env": None, "environments": [], "projects": []}
+    return {"schema": SCHEMA, "default_env": None, "environments": [], "projects": [], "consent": None, "budget": None}
 
 
 def load() -> dict:
