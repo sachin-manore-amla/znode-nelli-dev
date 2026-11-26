@@ -22,7 +22,7 @@ Please read these before relying on an answer.
 - Calls that change data need your approval for each call. Use a development or test environment, never production.
 
 ## Platform
-- Tested mainly on Windows. The credential store is the Windows Credential Manager; other systems use an environment variable name and are less tested.
+- Tested mainly on Windows. The gateway URL and credential are environment variables the developer sets; a variable set in another window needs a Claude Code restart to be seen. The setup commands shown are PowerShell; the Linux and macOS form is less tested.
 - Slash-menu behaviour and plugin updates depend on your Claude Code version.
 
 ## Generated code

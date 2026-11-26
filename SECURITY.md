@@ -7,7 +7,7 @@ Please include: the Nelli-Dev version (`.claude-plugin/plugin.json`), what you d
 
 ## What Nelli-Dev never does
 
-- **No secrets in chat.** It never asks for, accepts, prints or stores a token, password or key in the conversation. You enter your credential in your own terminal; it is kept in your operating system's credential store (or an environment variable you name) and used only inside the plugin's scripts. If you ever paste a secret into the chat, rotate it.
+- **No secrets in chat.** It never asks for, accepts, prints or stores a token, password or key in the conversation. You set your gateway URL and credential as environment variables in your own terminal (the plugin shows the command and never runs it); the credential is read only inside the plugin's scripts. If you ever paste a secret into the chat, rotate it.
 - **No writes without approval.** Before you approve a plan it writes only to its own working folders (`nd-work` and `nd-knowledge` in your workspace). After approval it writes only inside the scope you approved. Changes to the approval, the allowed gateway host or the project folders always ask you first.
 - **GET-only discovery.** To learn what your environment returns it makes read-only calls (GET and HEAD) to the gateway you recorded, within a call budget, with responses redacted. A call that changes data runs only after you approved that exact call. Payment and card calls are never run for you.
 - **Nothing leaves your machine without you.** No commit, push, deploy, package install or call to another host happens unless you pick it.

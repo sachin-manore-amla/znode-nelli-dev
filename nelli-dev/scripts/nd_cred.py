@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
 """Credential handling for Nelli-Dev. The only module that can read the stored token.
 
-The token is saved by the developer in their own terminal (nd_setup_token.py) in the Windows Credential
-Manager (generic credential, target "nelli-dev/<environment>"). The central config keeps only a reference:
-  credman:nelli-dev/<environment>     stored in the Windows Credential Manager
-  env:<NAME>                          read from an environment variable the developer sets (other systems, or by choice)
-Fallback when an environment has no reference: ZNODE_API_BASIC (basic) or ZNODE_API_TOKEN (bearer), as before.
+The token is an environment variable the developer sets in their own terminal (never through chat, never by a
+script the agent runs). Normal case: ZNODE_API_BASIC (basic) or ZNODE_API_TOKEN (bearer). The central config keeps only a reference:
+  env:<NAME>                          read from the environment variable NAME (recorded by nd_env.py credvar)
+  credman:nelli-dev/<environment>     LEGACY: a credential stored by an earlier version in the Windows Credential Manager (still read)
 
 This command line has NO command that prints a token, and none should be added. Code that needs the value
 (nd_call.py) imports resolve() and uses it inside the process, never printing it.

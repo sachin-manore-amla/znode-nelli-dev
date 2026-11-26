@@ -36,10 +36,10 @@ The knowledge skills (`sdk-*`, `webstore-*`, `config-*`, `commerce-*`, `api-*`, 
 ## Setup in short
 
 1. Add the plugin to Claude Code (plugin folder or marketplace; see the release notes for your distribution).
-2. Run `/nelli-dev:setup`. It records your gateway URL (a development or test environment, never production) and your project folders in one central file (`%USERPROFILE%\.nelli-dev\config.json`, no secrets), then asks you to run one command in your own terminal to save your credential in the Windows Credential Manager (hidden input). The credential never goes through the chat, files or logs.
+2. Run `/nelli-dev:setup`. It shows you two commands to run in your own terminal: they set your gateway URL (`NELLIDEV_GATEWAY_URL`, a development or test environment, never production) and your credential (`ZNODE_API_BASIC` or `ZNODE_API_TOKEN`) as environment variables. Restart Claude Code, and setup records the gateway and your project folders in one central file (`%USERPROFILE%\.nelli-dev\config.json`, no secrets, only variable names). Nelli-Dev does not run a script to ask for or store the URL or the credential, and they never go through the chat, files or logs.
 3. Put exported API specs in `<workspace>\nd-knowledge\specs\` (for example `commerce.json`, `core-v2.json`).
 
-Other systems without the Windows credential store: record an environment variable name with `nd_setup_token.py --use-env-var`.
+On Linux or macOS use `export NAME="value"` in the shell that starts Claude Code. A credential saved by an earlier version in the Windows Credential Manager still works until you replace it with the variable.
 
 ## How the guardrails are enforced
 
@@ -49,7 +49,7 @@ Two layers: the agents' instructions, and a PreToolUse hook (`scripts/nd_guard.p
 - before an approved plan exists, only `nd-work\` and `nd-knowledge\` can be written
 - approval is bound to the plan files (`nd_approve.py`): change the plan and the approval is void
 - HTTP tools may call your recorded gateway and the public Znode documentation sites only; non-GET calls ask first
-- the central configuration and the credential store are reachable only through the `nd_*` scripts; no command prints the token
+- the central configuration is reachable only through the `nd_*` scripts; the credential is an environment variable you set; no command prints it, and the guard refuses the agent setting or printing it
 - shell: no `git push`, hard resets, recursive deletes, env-file reads, environment dumps or writes outside the workspace; asks before package installs and deploy commands
 
 At the start of every run the agent proves the hook is active by reading a deliberately forbidden probe path and checking that the refusal comes from the guard. If it does not, the agent stops.
@@ -78,4 +78,4 @@ See `LICENSE`. See `KNOWN-LIMITS.md` for what the plugin does not cover and `REL
 - `python scripts/nd_verify.py`: layout, commands, agents, hook, guard self-test and registry check must all pass.
 - `python scripts/nd_registry.py check --sdk <sdk clone> --webstore <webstore clone>`: re-verify entries on each SDK, Webstore or Znode release.
 - `python scripts/nd_scan_customer_safety.py agents skills registry --allow-file knowledge/scan-allow.txt`: 0 leads before any release; a person reviews adapted skills.
-- `python tests/test_phase2.py`: configuration, credential store and token-leak tests.
+- `python tests/test_phase2.py`: configuration, credential and token-leak tests.

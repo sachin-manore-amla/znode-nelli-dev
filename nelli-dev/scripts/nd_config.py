@@ -131,7 +131,7 @@ def status(root=None) -> dict:
     if not envs:
         missing.append("environment (gateway URL)")
     elif not any(x["credential"].startswith(("stored", "env ")) for x in out_envs):
-        missing.append("credential (the developer runs nd_setup_token.py in their own terminal)")
+        missing.append("credential (the developer sets ZNODE_API_BASIC or ZNODE_API_TOKEN in their own terminal and restarts Claude Code)")
     if not projs:
         missing.append("project folders (Custom API SDK and/or Webstore)")
     return {"config_file": str(path()), "config_exists": path().exists(), "default_env": load().get("default_env"),

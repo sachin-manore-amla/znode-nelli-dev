@@ -94,7 +94,7 @@ def main() -> int:
         print("dry run: nothing changed. Run with --apply to carry this over.")
         return 0
     apply(root, p)
-    print("done. Credentials were not touched: the developer runs nd_setup_token.py for each environment. Old zc-work is unchanged.")
+    print("done. Credentials were not touched: the developer sets the credential variable (ZNODE_API_BASIC or ZNODE_API_TOKEN) in their own terminal. Old zc-work is unchanged.")
     return 0
 
 

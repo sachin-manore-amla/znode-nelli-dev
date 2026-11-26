@@ -226,7 +226,9 @@ DENY_CMDS = [
     (r"\b(?:Invoke-Expression|iex)\b|\bcurl\b[^|;]*\|\s*(?:sh|bash|pwsh|powershell)|\bwget\b[^|;]*\|\s*(?:sh|bash)", "piping downloads into a shell."),
     (r"\b(?:az|kubectl|helm|terraform)\s+(?:delete|destroy|apply)\b", "infrastructure change."),
     (r"\b(?:cmdkey|vaultcmd)\b|\bCredRead|Get-StoredCredential|\bnd_cred\.py\s+get\b|(?:python|py)\S*\s+(?:-\w+\s+)*-c\b[^|;&]*nd_cred", "reading the credential store. The token is used only inside the nd_* scripts."),
-    (r"\bnd_setup_token\b", "the developer enters the credential in their own terminal (nd_setup_token.py). Ask them to run it; never run it or pass a credential yourself."),
+    (r"\bnd_setup_token\b", "the credential is never entered through a script the agent runs. The developer sets the environment variable in their own terminal (setup shows the command)."),
+    (r"(?:\bsetx\b|\bSetEnvironmentVariable\b)[^|;&]*(?:ZNODE_API_|NELLIDEV_GATEWAY_URL)|\$env:(?:ZNODE_API_(?:BASIC|TOKEN)|NELLIDEV_GATEWAY_URL)\s*=(?!=)|\bexport\s+(?:ZNODE_API_|NELLIDEV_GATEWAY_URL)|\bset\s+(?:ZNODE_API_|NELLIDEV_GATEWAY_URL)\w*=",
+     "the gateway URL and the credential are set by the developer in their own terminal, never by the agent and never through chat. Show them the command and wait."),
     (r"\.nelli-dev\b", "the central configuration is read and changed only through the nd_* scripts."),
     (r"(?:echo|Write-Output|Write-Host|Write-Error|printf|print|Out-String|ConvertTo-Json|Set-Content|Add-Content|Out-File)\b[^|;&]*ZNODE_API_(?:BASIC|TOKEN)|GetEnvironmentVariable\([^)]*ZNODE_API|(?:^|[;&|(]\s*)\$env:ZNODE_API_(?:BASIC|TOKEN)\s*(?:$|[;|)])",
      "printing the credential variables. They are used only inside the nd_* scripts."),
@@ -496,8 +498,8 @@ def check_bash(cmd: str, root: str, cwd=None) -> None:
     check_shell_writes(cmd, root, cwd)
     if re.search(r"approval\.json|nd_approve", cmd):
         decision("ask", "this command records the developer's approval. Confirm only if you approved the plan.")
-    if re.search(r"environment\.json|nd_env\.py\s+(?:add|remove)", cmd):
-        decision("ask", "this command records which gateway host the agent may call. Confirm only if the developer gave you that URL and said it is not production.")
+    if re.search(r"environment\.json|nd_env\.py\s+(?:add|remove|from-env|credvar)", cmd):
+        decision("ask", "this command records which gateway host the agent may call (or which variable holds the credential). Confirm only if this is the developer's own development or test gateway, not production.")
     if re.search(r"(?<![\w-])(?:curl(?:\.exe)?|wget|Invoke-WebRequest|Invoke-RestMethod|iwr|irm)(?![\w-])", cmd, re.I):
         ok = allowed_hosts(root)
         for m in re.finditer(r"https?://([^/\s'\"?#:]+)", cmd, re.I):
@@ -727,6 +729,11 @@ def selftest() -> int:
         ("Bash", {"command": "cmdkey /list"}, "deny", "credential store listing"),
         ("Bash", {"command": "python -c \"import nd_cred; print(nd_cred._read('credman:nelli-dev/dev'))\""}, "deny", "token read through inline python"),
         ("Bash", {"command": "python nd_setup_token.py --env dev"}, "deny", "agent running the token script"),
+        ("Bash", {"command": "setx ZNODE_API_BASIC abc123"}, "deny", "agent setting the credential variable with setx"),
+        ("Bash", {"command": "[Environment]::SetEnvironmentVariable('ZNODE_API_TOKEN','x','User')"}, "deny", "agent setting the credential variable in PowerShell"),
+        ("Bash", {"command": "$env:ZNODE_API_BASIC = 'x'"}, "deny", "agent assigning the credential variable"),
+        ("Bash", {"command": "setx NELLIDEV_GATEWAY_URL https://x.example"}, "deny", "agent setting the gateway URL variable"),
+        ("Bash", {"command": "python nd_env.py from-env --name dev --non-production"}, "ask", "recording the gateway from its variable asks the developer"),
         ("Bash", {"command": "python nd_migrate.py --apply"}, "ask", "migration apply asks the developer"),
         ("Bash", {"command": "python nd_migrate.py"}, None, "migration dry run"),
         ("Bash", {"command": "python nd_config.py status --json"}, None, "config status"),

@@ -58,7 +58,7 @@ When sources disagree, follow this order, record the conflict, and raise it in t
 | `nd_env.py` | Record and check the developer's gateway URL (the agent asks, never guesses; only that host may be called) |
 | `nd_config.py` | The central configuration (one user-level file, no secrets): status, what is missing |
 | `nd_cred.py` | Credential state and removal (no command prints a token; only scripts use it) |
-| `nd_setup_token.py` | The developer enters the credential in their own terminal (hidden input, credential store) |
+| `nd_setup_token.py` | Legacy: stores a credential in the Windows Credential Manager. Setup no longer uses it |
 | `nd_migrate.py` | Carry old Z-Custom environments, projects and request folders into Nelli-Dev (dry run first) |
 | `nd_close_check.py` | End-of-run gate: progress file closed, required documents present with a Checked line, approval still matches the plan |
 | `nd_registry.py` | List, search, show and check the Capability Registry |

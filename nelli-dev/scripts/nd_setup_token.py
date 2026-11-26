@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
-"""Store the Znode API credential for a Nelli-Dev environment. THE DEVELOPER RUNS THIS IN THEIR OWN TERMINAL.
+"""LEGACY (not part of setup since 0.4.0): store the Znode API credential in the Windows Credential Manager.
+THE DEVELOPER RUNS THIS IN THEIR OWN TERMINAL. Setup now asks the developer to set an environment variable instead;
+this script stays only so credentials already stored by an earlier version keep working and can be replaced.
 
 It reads the token with hidden input and saves it in the Windows Credential Manager (target
 "nelli-dev/<environment>"), then records only a reference in the central config. It refuses to run when input

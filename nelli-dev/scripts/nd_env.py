@@ -6,6 +6,8 @@ allows API calls to that host only.
 
 Usage
   python nd_env.py add --name dev --gateway-url https://<gateway host> --non-production [--note "<text>"]
+  python nd_env.py from-env --name dev --non-production [--var NELLIDEV_GATEWAY_URL]   record the URL the developer set as a variable
+  python nd_env.py credvar --name dev --var MY_TOKEN_VAR     record which variable holds the credential (name only)
   python nd_env.py list
   python nd_env.py check [--name dev]       # read-only reachability test + whether credentials are set (never their values)
   python nd_env.py remove --name dev
@@ -15,8 +17,8 @@ Recorded in the central config (%USERPROFILE%/.nelli-dev/config.json, see nd_con
 (the guard), because it decides which host the agent may call.
 
 Rules enforced here: https only (http allowed for localhost); no credentials or query strings in the URL; the developer
-must state the environment is NOT production (--non-production is required). Credentials are never stored here: the developer saves them with nd_setup_token.py (credential store) or sets
-ZNODE_API_BASIC / ZNODE_API_TOKEN in their own environment; this file records only a reference.
+must state the environment is NOT production (--non-production is required). Credentials are never stored here: the developer sets ZNODE_API_BASIC / ZNODE_API_TOKEN (and NELLIDEV_GATEWAY_URL)
+as environment variables in their own terminal; this file records only the variable name.
 `check` sends one unauthenticated GET to the gateway root and reports the status code; any HTTP status (even 401/404)
 proves the host is reachable, a connection error proves it is not. It never sends a secret.
 """
@@ -75,6 +77,44 @@ def cmd_add(a) -> int:
     return 0
 
 
+URL_VAR = "NELLIDEV_GATEWAY_URL"
+
+
+def cmd_from_env(a) -> int:
+    """Record the gateway URL the developer set as an environment variable in their own terminal."""
+    var = a.var or URL_VAR
+    value = os.environ.get(var, "").strip()
+    if not value:
+        sys.exit(f"the variable {var} is not set in this session. The developer sets it in their own terminal "
+                 f"(setup shows the command) and restarts Claude Code so it is visible here. Never pass the URL through chat.")
+    a.gateway_url = value
+    a.note = a.note or f"from {var}"
+    a.auth_scheme = a.auth_scheme or "auto"
+    rc = cmd_add(a)
+    if rc == 0:
+        data = load()
+        for e in data["environments"]:
+            if e["name"] == a.name:
+                e["gateway_url_var"] = var
+        save(data["environments"])
+    return rc
+
+
+def cmd_credvar(a) -> int:
+    """Record WHICH environment variable holds the credential (the name only; never a value)."""
+    import re
+    if not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]{1,63}", a.var):
+        sys.exit("give a plain variable name (letters, digits, underscore)")
+    data = load()
+    for e in data["environments"]:
+        if e["name"] == a.name:
+            e["credential_ref"] = f"env:{a.var}"
+            save(data["environments"])
+            print(f"recorded: {a.name} reads its credential from the environment variable {a.var} (the developer sets it in their own terminal).")
+            return 0
+    sys.exit(f"no environment named {a.name}: record it first")
+
+
 def creds_status(e: dict | None = None) -> str:
     import nd_cred
     envs = [e] if e else load()["environments"]
@@ -112,7 +152,7 @@ def cmd_check(a) -> int:
     print(creds_status(e))
     import nd_cred
     if code < 500 and nd_cred.state(e).endswith("NOT set"):
-        print("authenticated calls need the developer to run nd_setup_token.py in their own terminal; never paste the credential in chat.")
+        print("authenticated calls need the credential variable (ZNODE_API_BASIC or ZNODE_API_TOKEN) set by the developer in their own terminal, then Claude Code restarted; never paste the credential in chat. /nelli-dev:setup shows the command.")
     return 0
 
 
@@ -135,6 +175,9 @@ def main() -> int:
     sub = ap.add_subparsers(dest="cmd", required=True)
     s = sub.add_parser("add"); s.add_argument("--name", required=True); s.add_argument("--gateway-url", required=True)
     s.add_argument("--non-production", action="store_true"); s.add_argument("--auth-scheme", choices=["auto", "basic", "bearer"], default="auto"); s.add_argument("--note"); s.set_defaults(fn=cmd_add)
+    fe = sub.add_parser("from-env"); fe.add_argument("--name", required=True); fe.add_argument("--var"); fe.add_argument("--non-production", action="store_true")
+    fe.add_argument("--auth-scheme", choices=["auto", "basic", "bearer"]); fe.add_argument("--note"); fe.set_defaults(fn=cmd_from_env)
+    cv = sub.add_parser("credvar"); cv.add_argument("--name", required=True); cv.add_argument("--var", required=True); cv.set_defaults(fn=cmd_credvar)
     sub.add_parser("list").set_defaults(fn=cmd_list)
     c = sub.add_parser("check"); c.add_argument("--name"); c.set_defaults(fn=cmd_check)
     r = sub.add_parser("remove"); r.add_argument("--name", required=True); r.set_defaults(fn=cmd_remove)

@@ -1,5 +1,15 @@
 # Nelli-Dev release notes
 
+## 0.4.0
+
+Setup no longer runs a script to ask for or store your gateway URL or credential.
+
+### Changed in 0.4.0
+- **You set the gateway URL and the credential yourself.** `/nelli-dev:setup` shows two PowerShell commands that set `NELLIDEV_GATEWAY_URL` and `ZNODE_API_BASIC` (or `ZNODE_API_TOKEN`) as environment variables in your own terminal. Restart Claude Code afterwards so it can see them. Nelli-Dev never runs these commands, never asks for the values in chat, and the guard refuses it setting or printing them.
+- **Recording.** `nd_env.py from-env` reads the URL variable and records the gateway (still confirmed on screen, development or test only). `nd_env.py credvar` records the name of a differently named credential variable. The configuration file holds names only, never values.
+- **Existing setups keep working.** A credential saved by an earlier version in the Windows Credential Manager is still read; `nd_setup_token.py` is kept as a legacy tool and setup no longer uses it.
+- Known limit: a variable set in another window is not visible to a running Claude Code, so a restart is needed.
+
 ## 0.3.0
 
 Nelli-Dev is now safer, shows what it is doing, and keeps your data on your machine.

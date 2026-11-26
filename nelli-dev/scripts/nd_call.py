@@ -125,7 +125,7 @@ def call(env: dict, method: str, target: str, query=(), body: bytes | None = Non
     if scheme != "none":
         got = nd_cred.resolve(dict(env, auth_scheme=auth) if auth in ("basic", "bearer") else env)
         if not got:
-            sys.exit("no credential for this environment: the developer runs nd_setup_token.py in their own terminal (see /nelli-dev:setup).")
+            sys.exit("no credential for this environment: the developer sets ZNODE_API_BASIC or ZNODE_API_TOKEN in their own terminal and restarts Claude Code (/nelli-dev:setup shows the command).")
         used, secret, _src = got
         used = used if used in ("basic", "bearer") else "basic"
         headers["Authorization"] = ("Basic " if used == "basic" else "Bearer ") + secret
