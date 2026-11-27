@@ -1,6 +1,6 @@
 {
   "name": "nelli-dev",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "Nelli-Dev: the Znode customization engineer for customer and partner developers. Turns a customization requirement into a validated, secure implementation on the Custom API SDK and the Webstore source, recommends APIs and builds working curls, and reviews customization code. Start with /nelli-dev:setup.",
   "author": {
     "name": "Znode"

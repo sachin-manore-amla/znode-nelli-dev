@@ -1,5 +1,13 @@
 # Nelli-Dev release notes
 
+## 0.4.1
+
+Corrections only.
+
+### Changed in 0.4.1
+- **The integrity check no longer fails on line endings.** The release manifest now hashes text with Windows line endings read as LF, so an install that converted line endings still verifies. Any other change to a file is still reported.
+- The manifest was rebuilt from the current files, so skill wording edited after 0.4.0 is covered.
+
 ## 0.4.0
 
 Setup no longer runs a script to ask for or store your gateway URL or credential.
